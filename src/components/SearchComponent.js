@@ -3,17 +3,27 @@ import { useDispatch, useSelector, connect } from 'react-redux'
 import { getGames, getTopGames } from '../actions/gameActions'
 import Autosuggest from 'react-autosuggest'
 import gamesList from '../config/allGames'
+import streamsList from '../config/allStreams'
 
 import { getTopStreams } from '../actions/streamActions'
 
 //Auto suggest => add streams list to auto fill
 
-const getSuggestions = value => {
+const getGamesSuggestions = value => {
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
   
     return inputLength === 0 ? [] : gamesList.games.filter(game => 
       game.toLowerCase().slice(0, inputLength) === inputValue
+    )
+}
+
+const getStreamsSuggestions = value => {
+    const inputValue = value.trim().toLowerCase();
+    const inputLength = inputValue.length;
+  
+    return inputLength === 0 ? [] : streamsList.streams.filter(stream => 
+      stream.toLowerCase().slice(0, inputLength) === inputValue
     )
 }
 
@@ -23,117 +33,17 @@ const renderSuggestion = suggestion => (
     <span>
       {suggestion}
     </span>
-  )
-
-/*
-//Functional component
-const Search = () => {
-    const [game] = useSelector(state => state.game.game)
-    const topGames = useSelector(state => state.game.topGames)
-    const dispatch = useDispatch()
-    let gameData = { //dummy
-        id: 493057
-    }
-
-    const [text, updateText] = useState({searchGamesInput: ''})
-    const [suggestions, updateSuggestions] = useState([])
-
-    const handleChange = (event, { newValue, method }) => {
-        updateText({
-            ...text,
-            [event.target.name]: [event.target.value]
-        })
-    }
-
-    const onSuggestionsFetchRequested = ({ value }) => {
-        updateSuggestions({
-          suggestions: getSuggestions(value)
-        });
-      };
-    
-    const onSuggestionsClearRequested = () => {
-        updateSuggestions({
-          suggestions: []
-        });
-      };
-
-    const handleSubmit = (event) => {
-        event.preventDefault()
-        gameData = {}
-        console.log(text)
-        dispatch(getTopGames())
-        //dispatch(getGames(gameData))
-    }
-    
-    useEffect(() => {
-        //update this for final instead of the button
-    })
-
-    const inputProps = {
-        placeholder: "Game* or Steamer*",
-        value: text,
-        onChange: handleChange
-    }
-
-    return (
-        <div className="getGames">
-            <h3 className="submitTitle">Search <b className="textAccent">Twitch</b> by game or streamer</h3>
-            <form
-                className="submitGamesForm" 
-                onSubmit={handleSubmit}
-            >
-                <Autosuggest
-                    suggestions={suggestions}
-                    onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                    onSuggestionsClearRequested={onSuggestionsClearRequested}
-                    getSuggestionValue={getSuggestionValue}
-                    renderSuggestion={renderSuggestion}
-                    inputProps={inputProps}
-                />
-                {<input
-                    value={text.searchGamesInput}
-                    onChange={handleChange}
-                    type="text"
-                    name="searchGamesInput"
-                    placeholder="Game* or Steamer*"
-                    className="submitGamesInput"
-                />}
-                <div className="buttonWrapper">
-                    <button
-                        type="submit"
-                        name="game"
-                        className="findGameButton"
-                    >
-                        find game
-                    </button>
-                    <div className="verticalRuleSmall"></div>
-                    <button
-                        type="submit"
-                        name="streamer"
-                        className="findGameButton"
-                        onSubmit={() => //this needs to set global state to the submitted stramer, then redirect to '/streamer'
-                            dispatch(getGames(gameData))
-                        }
-                    >
-                        find streamer
-                    </button>
-                </div>
-            </form>
-
-        </div>
-    )
-}
-
-export default Search*/
-
+)
 
 class Search extends Component {
     constructor() {
         super()
         this.state = {
             value: '',
-            suggestions: []
+            suggestions: [],
+            findBy: false
         }
+        this.handleCheckBox = this.handleCheckBox.bind(this)
     }
 
     onChange = (event, { newValue, method }) => {
@@ -142,9 +52,19 @@ class Search extends Component {
         })
     }
 
+    handleCheckBox(event) {
+        const target = event.target
+        const value = target.checked
+        const name = target.name
+
+        this.setState({
+            [name]: value
+        })
+    }
+
     onSuggestionsFetchRequested = ({ value }) => {
         this.setState({
-            suggestions: getSuggestions(value)
+            suggestions: this.state.findBy === false ? getGamesSuggestions(value) : getStreamsSuggestions(value)
         })
     }
 
@@ -158,7 +78,9 @@ class Search extends Component {
         event.preventDefault()
         const gameData = {}
         console.log(this.state.value)
-        this.props.getTopStreams() // temporary, for scraping games list
+        this.state.findBy === false 
+        ? this.props.getTopGames()
+        : this.props.getTopStreams() // temporary, for scraping games list
         //dispatch(getTopGames())
         //dispatch(getGames(gameData))
     }
@@ -166,14 +88,29 @@ class Search extends Component {
     render() {
         const { value, suggestions } = this.state
         const inputProps = {
-          placeholder: "Game* or Steamer*",
+          placeholder: this.state.findBy === false ? "Game*" : "Steamer*",
           value,
           onChange: this.onChange
         }
 
         return (
             <div className="getGames">
-                <h3 className="submitTitle">Search <b className="textAccent">Twitch</b> by game or streamer</h3>
+                <h3 className="submitTitle">Search <b className="textAccent">Twitch.tv</b></h3>
+                <p className="subText">by game or streamer</p>
+                 <div class="toggleWrapper">
+                    <div class="can-toggle can-toggle--size-large">
+                        <input
+                            name="findBy"
+                            id="toggle" 
+                            type="checkbox"
+                            checked={this.state.findBy}
+                            onChange={this.handleCheckBox}
+                        />
+                        <label for="toggle">
+                            <div class="can-toggle__switch" data-checked="Stream" data-unchecked="Game"></div>
+                        </label>
+                        </div>
+                    </div>
                 <form
                     className="submitGamesForm" 
                     onSubmit={this.handleSubmit}
@@ -192,15 +129,7 @@ class Search extends Component {
                             name="game"
                             className="findGameButton"
                         >
-                            find game
-                        </button>
-                        <div className="verticalRuleSmall"></div>
-                        <button
-                            type="submit"
-                            name="streamer"
-                            className="findGameButton"
-                        >
-                            find streamer
+                            Search
                         </button>
                     </div>
                 </form>

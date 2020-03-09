@@ -48,13 +48,13 @@ export const getGames = gameData => dispatch => {
 }
 
 //Get top games
-export const getTopGames = () => dispatch => { //listData
+export const getTopGames = () => dispatch => {
     dispatch(setTopGamesLoading())
     helix
-        .get(`games/top?first=100`) //${listData.number}
+        .get(`games/top`) //${listData.number}
         .then(res => {
             let topgames = res.data.data // clean up/remove later
-            console.log(topgames.map(game => game.name), res.data.pagination) // clean up/remove later
+            console.log(topgames.map(game => game.name)) // clean up/remove later
             dispatch({
                 type: GET_TOP_GAMES,
                 payload: res.data
@@ -77,4 +77,21 @@ export const gameFadeOn = () => {
     return {
         type: GAME_FADE_ON
     }
+}
+
+//Games scape
+export const gamesScrape = () => dispatch => { //listData
+    helix
+        .get(`games/top?first=100`) //${listData.number}
+        .then(res => {
+            let topgames = res.data.data // clean up/remove later
+            console.log(topgames.map(game => game.name), res.data.pagination) // clean up/remove later
+            dispatch({
+                type: GET_TOP_GAMES,
+                payload: res.data
+            })
+        })
+        .catch(err =>
+            dispatch(returnErrors(err.response.data, err.response.status))    
+        )
 }
