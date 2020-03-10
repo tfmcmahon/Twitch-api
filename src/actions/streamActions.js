@@ -6,6 +6,8 @@ import {
     TOP_STREAMS_LOADING,
     GET_TOP_STREAMS
 } from './types'
+import { getTopGames } from './gameActions'
+
 
 const twitchID = config.TwitchID
 const helix = axios.create({
@@ -14,6 +16,7 @@ const helix = axios.create({
 })
 
 //Top streams loading
+//State action
 export const setTopStreamsLoading = () => {
     return {
       type: TOP_STREAMS_LOADING
@@ -23,12 +26,14 @@ export const setTopStreamsLoading = () => {
 //GET https://api.twitch.tv/helix/streams
 //GET top streams
 export const getTopStreams = () => dispatch => {
+    let topStreams, gameIds
     dispatch(setTopStreamsLoading())
     helix
-        .get('streams') 
+        .get('streams?first=20') 
         .then(res => {
-            let topgames = res.data.data // clean up/remove later
-            console.log(topgames.map(game => game.user_name), res.data.pagination) // clean up/remove later
+            topStreams = res.data.data
+            gameIds = topStreams.map(stream => `id=${Number(stream.game_id)}`).join('&')
+            dispatch(getTopGames(gameIds)) // use the reuslting IDs to get the game names and art links
             dispatch({
                 type: GET_TOP_STREAMS,
                 payload: res.data
@@ -42,7 +47,7 @@ export const getTopStreams = () => dispatch => {
 //Stream scrape
 export const streamScrape = () => dispatch => { //listData
     helix
-        .get(`streams?first=100&after=ZXlKeklqbzVPRGt1TnpNd01EQXlNVFk0T1RZNE9Dd2laQ0k2Wm1Gc2MyVXNJblFpT25SeWRXVjkgZXlKeklqbzJPVFF1T0Rjd016TTFOekEyTURjMk9Dd2laQ0k2Wm1Gc2MyVXNJblFpT25SeWRXVjk`) //${listData.number}
+        .get(`streams?first=100&after=ZXlKeklqb3hNRGM0TGpZeU5qSTVPRFF3TVRZMU1EVXNJbVFpT21aaGJITmxMQ0owSWpwMGNuVmxmUT09IGV5SnpJam8zTVRrdU56RXlPVGMxTVRRME16Z3lOQ3dpWkNJNlptRnNjMlVzSW5RaU9uUnlkV1Y5`) //${listData.number}
         .then(res => {
             let topgames = res.data.data // clean up/remove later
             console.log(topgames.map(game => game.user_name), res.data.pagination) // clean up/remove later

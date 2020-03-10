@@ -18,6 +18,7 @@ const helix = axios.create({
 })
 
 //Games loading
+//State action
 export const setGamesLoading = () => {
     return {
       type: GAMES_LOADING
@@ -25,17 +26,19 @@ export const setGamesLoading = () => {
 }
 
 //Top games loading
+//State action
 export const setTopGamesLoading = () => {
     return {
       type: TOP_GAMES_LOADING
     }
 }
 
+//GET https://api.twitch.tv/helix/games?id=VAR
 //Get games
 export const getGames = gameData => dispatch => {
     dispatch(setGamesLoading())
     helix
-        .get(`games?id=${gameData.id}`)
+        .get(`games?id=`)
         .then(res => {
             dispatch({
                 type: GET_GAMES,
@@ -47,7 +50,27 @@ export const getGames = gameData => dispatch => {
         )
 }
 
+//GET https://api.twitch.tv/helix/games?id=VAR
+//Get games landing
+export const getTopGames = streamResult => dispatch => {
+    dispatch(setGamesLoading())
+    helix
+        .get(`games?${streamResult}`)
+        .then(res => {
+            dispatch({
+                type: GET_TOP_GAMES,
+                payload: res.data
+            })
+        })
+        .catch(err =>
+            dispatch(returnErrors(err.response.data, err.response.status))    
+        )
+}
+
+
+//GET https://api.twitch.tv/helix/games/top
 //Get top games
+/*
 export const getTopGames = () => dispatch => {
     dispatch(setTopGamesLoading())
     helix
@@ -64,8 +87,10 @@ export const getTopGames = () => dispatch => {
             dispatch(returnErrors(err.response.data, err.response.status))    
         )
 }
+*/
 
 //Fade off
+//State action
 export const gameFadeOff = () => {
     return {
         type: GAME_FADE_OFF
@@ -73,6 +98,7 @@ export const gameFadeOff = () => {
 }
   
 //Fade on
+//State action
 export const gameFadeOn = () => {
     return {
         type: GAME_FADE_ON

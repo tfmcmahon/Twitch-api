@@ -42,6 +42,19 @@
     }
 }
 
+::-webkit-scrollbar {
+  width: 9px
+  !important
+}
+
+::-webkit-scrollbar-thumb {
+  background: black;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--clr-dark);
+}
+
 /*------------------------------- General styles -------------------------------*/
 
 html {
@@ -60,6 +73,7 @@ body,
   line-height: 1.6em;
   height: 100%;
   position: relative;
+  overflow: overlay;
 }
 
 .wrapper {
@@ -230,7 +244,8 @@ a:hover {
 
 .findGameButton {
   align-self: center;
-  background: var(--clr-accent);
+  background: var(--clr-neighbor1);
+  color: black;
 }
 
 .buttonWrapper {
@@ -435,6 +450,123 @@ h5 { font-size: var(--fs-h3) }
   color: var(--clr-accent)
 }
 
+/*------------------------------- Game Cards --------------------------*/
+
+.gameCardSection {
+  margin-top: 2em;
+  margin-bottom: 5em;
+}
+
+.gameCardWrapper {
+  display: flex;
+  margin: 1em 1.5em;
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  border-color: black;
+  background-color: rgba(0,0,0,.2);
+}
+
+.gridHelpText {
+  visibility: hidden;
+}
+
+.streamInfoWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-top: .5em;
+  margin-bottom: .5em;
+  flex-grow: 3;
+  width: 40%;
+  border-radius: 4px;
+}
+
+.streamerNameText {
+  color: var(--clr-light);
+  text-transform: uppercase;
+  align-self: center;
+  font-size: var(--fs-h2);
+  margin: .2em;
+  text-shadow: 0px 2px var(--clr-neighbor2);
+}
+
+.streamTitleText {
+  align-self: center;
+  color: var(--clr-neighbor1);
+  flex-wrap: wrap;
+  text-align: center;
+  padding: .4em;
+}
+
+.boxArtWrapper {
+  display: grid;
+  width: min-content;
+  padding-right: 1em;
+  margin: 0 auto;
+  margin-left: 0em;
+  grid-column-gap: 1em;
+  grid-template-areas: 
+      'img title' 
+      'img subtitle';
+  grid-template-columns: min-content max-content;
+  height: 200px;
+}
+
+.viewerCountText {
+  align-self: start;
+  grid-column: -1 / 1;
+  grid-row: 2;
+  text-align: right;
+  left: -1.5em;
+  width: calc(100%);
+  color: red;
+  background: var(--clr-neighbor1);
+  padding: .25em 1em;
+  font-family: var(--ff-primary);
+  margin-bottom: 1em;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  font-weight: bold;
+}
+
+.boxArt {
+  grid-area: img;
+  min-width: 120px;
+  position: relative;
+  z-index: 2;
+}
+
+.boxArt,
+.streamThumbnail {
+  margin: 1em;
+  align-self: center;
+  border-style: solid;
+  border-radius: 3px;
+  border-width: 1px;
+  border-bottom-width: 2px;
+  border-color: var(--clr-neighbor2);
+  flex-grow: 1;
+}
+
+.streamThumbnail {
+  flex-grow: 2;
+  justify-self: center;
+  border-color: var(--clr-accent);
+}
+
+.streamImageWrapper {
+  display: flex;
+  height: 200px;
+}
+
+.boxArt:hover,
+.streamThumbnail:hover {
+  border-bottom-width: 6px;
+  transform: translateY(-2px);
+}
+
 /*------------------------------- Rules -------------------------------*/
 
 .verticalRule {
@@ -481,8 +613,8 @@ h5 { font-size: var(--fs-h3) }
   background: linear-gradient(
     90deg, 
     rgba(51, 74, 82, 0) 10%, 
-    var(--clr-neighbor3) 30%, 
-    var(--clr-neighbor3) 70%, 
+    var(--clr-neighbor2) 30%, 
+    var(--clr-neighbor2) 70%, 
     rgba(51, 74, 82, 0) 90%
   );
   height: 1px;
@@ -876,15 +1008,15 @@ h5 { font-size: var(--fs-h3) }
 }
 
 .can-toggle input[type="checkbox"][disabled] ~ label {
-  color: var(--clr-neighbor3);
+  color: var(--clr-neighbor2);
 }
 
 .can-toggle input[type="checkbox"]:focus ~ label .can-toggle__switch, .can-toggle input[type="checkbox"]:hover ~ label .can-toggle__switch {
-  background-color: var(--clr-neighbor3);
+  background-color: var(--clr-neighbor2);
 }
 
 .can-toggle input[type="checkbox"]:focus ~ label .can-toggle__switch:after, .can-toggle input[type="checkbox"]:hover ~ label .can-toggle__switch:after {
-  color: var(--clr-neighbor3);
+  color: var(--clr-neighbor2);
 }
 
 .can-toggle input[type="checkbox"]:hover ~ label {
@@ -896,7 +1028,7 @@ h5 { font-size: var(--fs-h3) }
 }
 
 .can-toggle input[type="checkbox"]:checked ~ label .can-toggle__switch {
-  background-color:var(--clr-accent);
+  background-color: var(--clr-accent);
 }
 
 .can-toggle input[type="checkbox"]:checked ~ label .can-toggle__switch:after {
@@ -919,7 +1051,7 @@ h5 { font-size: var(--fs-h3) }
 .can-toggle label .can-toggle__switch {
   -webkit-transition: background-color 0.3s cubic-bezier(0, 1, 0.5, 1);
   transition: background-color 0.3s cubic-bezier(0, 1, 0.5, 1);
-  background: var(--clr-neighbor3);
+  background: var(--clr-neighbor2);
 }
 
 .can-toggle label .can-toggle__switch:before {
@@ -931,7 +1063,7 @@ h5 { font-size: var(--fs-h3) }
   transition: -webkit-transform 0.3s cubic-bezier(0, 1, 0.5, 1);
   transition: transform 0.3s cubic-bezier(0, 1, 0.5, 1);
   transition: transform 0.3s cubic-bezier(0, 1, 0.5, 1), -webkit-transform 0.3s cubic-bezier(0, 1, 0.5, 1);
-  color: var(--clr-darkBlue);
+  color: var(--clr-neighbor2);
   font-weight: bold;
 }
 
@@ -1010,7 +1142,7 @@ h5 { font-size: var(--fs-h3) }
 }
 
 .can-toggle.can-toggle--size-large label .can-toggle__switch:before {
-  left: 80px;
+  left: 76px;
   font-size: var(--fs-body);
   line-height: 50px;
   width: 80px;

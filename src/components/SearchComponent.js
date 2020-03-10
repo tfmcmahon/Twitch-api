@@ -1,11 +1,11 @@
 import React, { useEffect, useState, Component } from 'react'
 import { useDispatch, useSelector, connect } from 'react-redux'
-import { getGames, getTopGames } from '../actions/gameActions'
 import Autosuggest from 'react-autosuggest'
 import gamesList from '../config/allGames'
 import streamsList from '../config/allStreams'
 
-import { getTopStreams } from '../actions/streamActions'
+import { getGames } from '../actions/gameActions'
+import { getTopStreams, streamScrape } from '../actions/streamActions'
 
 //Auto suggest => add streams list to auto fill
 
@@ -79,9 +79,8 @@ class Search extends Component {
         const gameData = {}
         console.log(this.state.value)
         this.state.findBy === false 
-        ? this.props.getTopGames()
-        : this.props.getTopStreams() // temporary, for scraping games list
-        //dispatch(getTopGames())
+        ? this.props.getGames()
+        : this.props.streamScrape() // temporary, for scraping games list
         //dispatch(getGames(gameData))
     }
 
@@ -97,8 +96,8 @@ class Search extends Component {
             <div className="getGames">
                 <h3 className="submitTitle">Search <b className="textAccent">Twitch.tv</b></h3>
                 <p className="subText">by game or streamer</p>
-                 <div class="toggleWrapper">
-                    <div class="can-toggle can-toggle--size-large">
+                 <div className="toggleWrapper">
+                    <div className="can-toggle can-toggle--size-large">
                         <input
                             name="findBy"
                             id="toggle" 
@@ -106,8 +105,8 @@ class Search extends Component {
                             checked={this.state.findBy}
                             onChange={this.handleCheckBox}
                         />
-                        <label for="toggle">
-                            <div class="can-toggle__switch" data-checked="Stream" data-unchecked="Game"></div>
+                        <label htmlFor="toggle">
+                            <div className="can-toggle__switch" data-checked="Stream" data-unchecked="Game"></div>
                         </label>
                         </div>
                     </div>
@@ -144,5 +143,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { getGames, getTopGames, getTopStreams }
+    { getGames, getTopStreams, streamScrape }
 )(Search)
