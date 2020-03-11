@@ -1,7 +1,7 @@
 import {
     GAMES_LOADING,
     TOP_GAMES_LOADING,
-    GET_GAMES,
+    GET_GAME,
     GET_TOP_GAMES,
     GAME_FADE_ON,
     GAME_FADE_OFF
@@ -27,7 +27,7 @@ const gameReducers = function(state = initialState, action) {
                 ...state,
                 topGamesLoading: true
             }
-        case GET_GAMES:
+        case GET_GAME:
             return {
                 ...state,
                 game: action.payload.data,

@@ -7,6 +7,7 @@ import './App.css'
 import Nav from './components/NavComponent'
 import Footer from './components/FooterComponent'
 import Landing from './components/LandingComponent'
+import GamePage from './components/GamePageComponent'
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
           <Nav />
           <Switch>
           <Route exact path='/' component={Landing} />
-
+          <Route exact path='/twitch-api' component={Landing} />
+          <Route exact path='/twitch-api/game' component={GamePage} />
           </Switch>
           <div className="blueFill"></div>
         </div>

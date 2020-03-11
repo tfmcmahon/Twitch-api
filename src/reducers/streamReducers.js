@@ -1,23 +1,25 @@
 import {
-    GET_STREAMER,
+    GET_STREAM,
+    GET_STREAMS_BY_GAME,
     TOP_STREAMS_LOADING,
     GET_TOP_STREAMS,
     STREAM_FADE_OFF,
     STREAM_FADE_ON,
-    STREAM_LOADING
+    STREAMS_LOADING
 } from '../actions/types'
 
 const initialState = {
     stream: [],
+    streams: [],
     streamLoading: false,
     topStreams: [],
     topStreamsLoading: false,
     fade: false
 }
 
-const gameReducers = function(state = initialState, action) {
+const streamReducers = function(state = initialState, action) {
     switch(action.type) {
-        case STREAM_LOADING:
+        case STREAMS_LOADING:
             return {
                 ...state,
                 streamLoading: true
@@ -27,12 +29,18 @@ const gameReducers = function(state = initialState, action) {
                 ...state,
                 topStreamsLoading: true
             }
-        case GET_STREAMER:
+        case GET_STREAM:
             return {
                 ...state,
                 stream: action.payload.data,
                 streamLoading: false
             }
+        case GET_STREAMS_BY_GAME:
+            return {
+                ...state,
+                streams: action.payload.data,
+                streamLoading: false
+            }    
         case GET_TOP_STREAMS:
             return {
                 ...state,
@@ -54,4 +62,4 @@ const gameReducers = function(state = initialState, action) {
     }
 }
 
-export default gameReducers
+export default streamReducers

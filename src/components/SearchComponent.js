@@ -1,11 +1,12 @@
-import React, { useEffect, useState, Component } from 'react'
-import { useDispatch, useSelector, connect } from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import Autosuggest from 'react-autosuggest'
 import gamesList from '../config/allGames'
 import streamsList from '../config/allStreams'
 
-import { getGames } from '../actions/gameActions'
-import { getTopStreams, streamScrape } from '../actions/streamActions'
+import { getGame } from '../actions/gameActions'
+import { getStream, streamScrape } from '../actions/streamActions'
 
 //Auto suggest => add streams list to auto fill
 
@@ -41,7 +42,9 @@ class Search extends Component {
         this.state = {
             value: '',
             suggestions: [],
-            findBy: false
+            findBy: false,
+            redirectGame: false,
+            redirectStream: false
         }
         this.handleCheckBox = this.handleCheckBox.bind(this)
     }
@@ -76,18 +79,33 @@ class Search extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        const gameData = {}
+        const searchData = encodeURIComponent(this.state.value).replace(/'/g, "%27")
         console.log(this.state.value)
-        this.state.findBy === false 
-        ? this.props.getGames()
-        : this.props.streamScrape() // temporary, for scraping games list
-        //dispatch(getGames(gameData))
+        if (this.state.findBy === false) {
+            this.props.getGame(searchData)
+            this.setState({
+                redirectGame: true
+            })
+        } else {
+            this.props.getStream(searchData)
+            this.setState({
+                redirectStream: true
+            })
+        } //check how to convert to twitch api id
+    }
+
+    renderRedirect = () => {
+        if (this.state.redirectGame) {
+            return <Redirect to='/twitch-api/game' />
+        } else if (this.state.redirectStream) {
+            return <Redirect to='/twitch-api/stream' />
+        }
     }
 
     render() {
         const { value, suggestions } = this.state
         const inputProps = {
-          placeholder: this.state.findBy === false ? "Game*" : "Steamer*",
+          placeholder: this.state.findBy === false ? "Game*" : "Steam*",
           value,
           onChange: this.onChange
         }
@@ -123,6 +141,7 @@ class Search extends Component {
                         inputProps={inputProps}
                     />
                     <div className="buttonWrapper">
+                        {this.renderRedirect()}
                         <button
                             type="submit"
                             name="game"
@@ -130,6 +149,7 @@ class Search extends Component {
                         >
                             Search
                         </button>
+
                     </div>
                 </form>
             </div>
@@ -143,5 +163,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { getGames, getTopStreams, streamScrape }
+    { getGame, getStream, streamScrape }
 )(Search)

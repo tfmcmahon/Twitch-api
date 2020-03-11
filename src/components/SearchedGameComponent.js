@@ -2,24 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 
-const GameCard = (props) => {
-    const topGames = useSelector(state => state.game.topGames)
-    const topUsers = useSelector(state => state.user.topUsers)
-    const [boxArtUrl, setBoxArtUrl] = useState('')
+const SearchedGame = (props) => {
+    const usersByGame = useSelector(state => state.user.users)
+    const [streamThumbnail, setStreamThumbnail] = useState('')
     const [userProfileArt, setUserProfileArt] = useState('')
     const [selectedColor, setSelectedColor] = useState('')
 
     const colors = [ '#a3d2e4', '#334A52', '#fff',' #412485']
 
-    let game = topGames.filter(game => game.id === props.gameId)
-    let user = topUsers.filter(user => user.id === props.userId)
+    let user = usersByGame.filter(user => user.id === props.userId)
     useEffect(() => {
-        if (topGames.length > 0 && topUsers.length > 0) {
-            let [{box_art_url}] = game
+        if (usersByGame.length > 0 && user.length > 0) {
+            console.log(user)
             let [{profile_image_url}] = user
-            setBoxArtUrl(
-                box_art_url
-                .replace('{width}', '120')
+            setStreamThumbnail(
+                props.thumbnail
+                .replace('{width}', '284')
                 .replace('{height}', '160')
             )
             setUserProfileArt(
@@ -29,11 +27,11 @@ const GameCard = (props) => {
             setSelectedColor(item)
 
         }
-    }, [topGames, topUsers]) //swap this back to empty array
+    }, [usersByGame])
 
     //console.log(user)
     
-    if (boxArtUrl) {
+    if (streamThumbnail) {
         return (
             <div className="gameCardWrapper">
                 <div className="boxArtWrapper">
@@ -52,7 +50,7 @@ const GameCard = (props) => {
                 <div className="verticalRuleSmall"></div>
 
                 <div className="streamImageWrapper">
-                <img src={boxArtUrl} alt="box art" className="boxArt"/>
+                <img src={streamThumbnail} alt="box art" className="boxArt"/>
                 </div>
             </div>
         )
@@ -63,6 +61,4 @@ const GameCard = (props) => {
     }
 }
 
-export default GameCard
-
-//<img src={streamThumbnail} alt="stream thumbnail" className="streamThumbnail"/>
+export default SearchedGame

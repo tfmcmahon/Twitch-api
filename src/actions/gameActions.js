@@ -4,7 +4,7 @@ import { returnErrors } from './errorActions'
 import {
     GAMES_LOADING,
     TOP_GAMES_LOADING,
-    GET_GAMES,
+    GET_GAME,
     GET_TOP_GAMES,
     GAME_FADE_ON,
     GAME_FADE_OFF
@@ -33,15 +33,15 @@ export const setTopGamesLoading = () => {
     }
 }
 
-//GET https://api.twitch.tv/helix/games?id=VAR
-//Get games
-export const getGames = gameData => dispatch => {
+//GET https://api.twitch.tv/helix/games?name=VAR
+//Get game
+export const getGame = searchData => dispatch => {
     dispatch(setGamesLoading())
     helix
-        .get(`games?id=`)
+        .get(`games?name=${searchData}`)
         .then(res => {
             dispatch({
-                type: GET_GAMES,
+                type: GET_GAME,
                 payload: res.data
             })
         })
