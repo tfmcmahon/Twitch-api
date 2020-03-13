@@ -46,6 +46,7 @@ export const getTopStreams = () => dispatch => {
         .get('streams?first=20') 
         .then(res => {
             streams = res.data.data
+            console.log('get top streams called')
             gameIds = streams.map(stream => `id=${Number(stream.game_id)}`).join('&')
             userIds = streams.map(stream => `id=${Number(stream.user_id)}`).join('&')
             dispatch(getTopGames(gameIds)) // use the reuslting IDs to get the game names and art links
@@ -67,6 +68,7 @@ export const getStream = searchData => dispatch => {
     helix
         .get(`streams?user_login=${searchData}`)
         .then(res => {
+            console.log(res.data)
             userId = res.data.data[0].user_id
             dispatch(getUser(userId))
             dispatch({
@@ -74,9 +76,10 @@ export const getStream = searchData => dispatch => {
                 payload: res.data
             })
         })
-        .catch(err =>
+        .catch(err => {
+            console.log(err)
             dispatch(returnErrors(err.response.data, err.response.status))    
-        )
+        })
 }
 
 //GET https://api.twitch.tv/helix/stream?id=VAR

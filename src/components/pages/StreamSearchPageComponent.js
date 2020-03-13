@@ -39,7 +39,7 @@ const StreamSearchPage = () => {
                 <div className="gameHeadlineArtWrapper">
                     <p className="gameSearchedHeadline">Now viewing {userName}'s profile</p>
                     <div className="gameSearchedBoxArtWrapper">
-                    <img src={userProfileArt} alt="box art" className="boxArt"/>
+                    <img src={userProfileArt} alt="box art" className="largeProfileImage"/>
                     </div>
                 </div>
                 <div className="horizontalRule"></div>

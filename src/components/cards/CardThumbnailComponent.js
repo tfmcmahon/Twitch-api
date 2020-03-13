@@ -49,7 +49,7 @@ const CardThumbnail = (props) => {
                 <div className="verticalRuleSmall"></div>
 
                 <div className="streamImageWrapper">
-                    <img src={streamThumbnail} alt="box art" className="boxArt"/>
+                    <img src={streamThumbnail} alt="box art" className="streamThumbnail"/>
                 </div>
             </div>
         )

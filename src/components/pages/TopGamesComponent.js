@@ -12,7 +12,7 @@ const TopGames = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        //dispatch(getTopStreams()) <=========================================uncomment to enable from page
+        dispatch(getTopStreams())
     }, []) //using an empty array should only allow this to update on mount
 
     const boxArtCards = topStreams.map(stream => 
@@ -27,7 +27,6 @@ const TopGames = () => {
             thumbnail={stream.thumbnail_url}
         />
     )
-
     return (
         <div className="gameCardSection">
             {boxArtCards}

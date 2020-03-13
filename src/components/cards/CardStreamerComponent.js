@@ -37,10 +37,10 @@ const CardStreamer = (props) => {
         return (
             <div className="gameCardWrapper">
                 <div className="boxArtWrapper">
-                    <img src={streamThumbnail} alt="profile icon" className="profileImage"/>
+                    <img src={streamThumbnail} alt="profile icon" className="boxArtSmall"/>
                     
                     <p className="gridHelpText">shape</p>
-                    <p className="viewerCountText" id="viewerCountText" style={{backgroundColor: selectedColor}}>•{props.viewerCount}</p>
+                    <p className="viewerCountTextProfile" id="viewerCountText" style={{backgroundColor: selectedColor}}>•{props.viewerCount}</p>
                 </div>
 
                 <div className="verticalRuleSmall"></div>
