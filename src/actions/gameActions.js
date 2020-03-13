@@ -40,10 +40,13 @@ export const getGame = searchData => dispatch => {
     helix
         .get(`games?name=${searchData}`)
         .then(res => {
-            dispatch({
-                type: GET_GAME,
-                payload: res.data
-            })
+            console.log(res.data.data)
+            if (res.data.data.length > 0) {
+                dispatch({
+                    type: GET_GAME,
+                    payload: res.data
+                })
+            }
         })
         .catch(err =>
             dispatch(returnErrors(err.response.data, err.response.status))    

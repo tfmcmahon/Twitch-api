@@ -68,18 +68,19 @@ export const getStream = searchData => dispatch => {
     helix
         .get(`streams?user_login=${searchData}`)
         .then(res => {
-            console.log(res.data)
-            userId = res.data.data[0].user_id
-            dispatch(getUser(userId))
-            dispatch({
-                type: GET_STREAM,
-                payload: res.data
-            })
+            console.log(res.data.data)
+            if (res.data.data.length > 0) {
+                userId = res.data.data[0].user_id
+                dispatch(getUser(userId))
+                dispatch({
+                    type: GET_STREAM,
+                    payload: res.data
+                })
+            }
         })
-        .catch(err => {
-            console.log(err)
+        .catch(err =>
             dispatch(returnErrors(err.response.data, err.response.status))    
-        })
+        )
 }
 
 //GET https://api.twitch.tv/helix/stream?id=VAR
