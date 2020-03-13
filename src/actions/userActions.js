@@ -56,10 +56,27 @@ export const getTopUsers = streamResult => dispatch => {
 export const getUsersByGame = streamResult => dispatch => {
     dispatch(setUsersLoading())
     helix
-        .get(`users?${streamResult}`)
+        .get(`users?${streamResult}`) //id field is baked in from stream action since there are multiple searches and each one needs 'id=...'
         .then(res => {
             dispatch({
                 type: GET_USERS_BY_GAME,
+                payload: res.data
+            })
+        })
+        .catch(err =>
+            dispatch(returnErrors(err.response.data, err.response.status))    
+        )
+}
+
+//GET https://api.twitch.tv/helix/users?id=VAR
+//Get user
+export const getUser = streamResult => dispatch => {
+    dispatch(setUsersLoading())
+    helix
+        .get(`users?id=${streamResult}`)
+        .then(res => {
+            dispatch({
+                type: GET_USER,
                 payload: res.data
             })
         })

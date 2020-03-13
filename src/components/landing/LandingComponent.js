@@ -1,8 +1,8 @@
 import React from 'react'
 
-import Search from './SearchComponent'
-import TopGames from './TopGamesComponent'
-import Transition from '../images/transition1.svg'
+import Search from '../SearchComponent'
+import TopGames from '../pages/TopGamesComponent'
+import Transition from '../../images/transition1.svg'
 
 const Landing = () => {
     return (

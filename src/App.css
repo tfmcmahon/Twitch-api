@@ -546,7 +546,8 @@ h5 { font-size: var(--fs-h3) }
 
 .boxArt,
 .streamThumbnail,
-.profileImage {
+.profileImage,
+.notFoundArt {
   margin: 1em;
   align-self: center;
   border-style: solid;
@@ -565,6 +566,7 @@ h5 { font-size: var(--fs-h3) }
 
 .profileImage {
   border-radius: 120px;
+  background-color: var(--clr-accent);
 }
 
 .streamImageWrapper {
@@ -574,7 +576,9 @@ h5 { font-size: var(--fs-h3) }
 
 .boxArt:hover,
 .streamThumbnail:hover,
-.profileImage:hover {
+.profileImage:hover,
+.notFoundArt:hover,
+.notFoundStream:hover {
   border-bottom-width: 6px;
   transform: translateY(-2px);
 }
@@ -604,6 +608,32 @@ h5 { font-size: var(--fs-h3) }
 .gameSearchedBoxArtWrapper {
   height: 360px;
 }
+
+.notFoundArt {
+  width: 240px;
+  height: 320px;
+}
+
+.gameSearchedHeadline + .gameSearchedHeadline {
+  margin-top: -.5em;
+}
+
+/*------------------------------- Stream Search --------------------------*/
+
+.streamNotFoundWrapper {
+  height: 360px;
+}
+
+.notFoundStream {
+  border-radius: 160px;
+  margin: 2em;
+  align-self: center;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom-width: 2px;
+  border-color: var(--clr-neighbor2);
+}
+
 
 /*------------------------------- Rules -------------------------------*/
 

@@ -80,13 +80,13 @@ class Search extends Component {
     handleSubmit = (event) => {
         event.preventDefault()
         const searchData = encodeURIComponent(this.state.value).replace(/'/g, "%27")
-        console.log(this.state.value)
         if (this.state.findBy === false) {
             this.props.getGame(searchData)
             this.setState({
                 redirectGame: true
             })
         } else {
+            console.log(searchData) //JimDavisMTG
             this.props.getStream(searchData)
             this.setState({
                 redirectStream: true

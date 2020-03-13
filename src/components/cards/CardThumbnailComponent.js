@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 
-const SearchedGame = (props) => {
+const CardThumbnail = (props) => {
     const usersByGame = useSelector(state => state.user.users)
     const [streamThumbnail, setStreamThumbnail] = useState('')
     const [userProfileArt, setUserProfileArt] = useState('')
@@ -12,8 +12,7 @@ const SearchedGame = (props) => {
 
     let user = usersByGame.filter(user => user.id === props.userId)
     useEffect(() => {
-        if (usersByGame.length > 0 && user.length > 0) {
-            console.log(user)
+        if (user.length > 0) { //usersByGame.length > 0 && 
             let [{profile_image_url}] = user
             setStreamThumbnail(
                 props.thumbnail
@@ -50,7 +49,7 @@ const SearchedGame = (props) => {
                 <div className="verticalRuleSmall"></div>
 
                 <div className="streamImageWrapper">
-                <img src={streamThumbnail} alt="box art" className="boxArt"/>
+                    <img src={streamThumbnail} alt="box art" className="boxArt"/>
                 </div>
             </div>
         )
@@ -61,4 +60,4 @@ const SearchedGame = (props) => {
     }
 }
 
-export default SearchedGame
+export default CardThumbnail

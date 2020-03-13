@@ -50,6 +50,23 @@ export const getGame = searchData => dispatch => {
         )
 }
 
+//GET https://api.twitch.tv/helix/games?name=VAR
+//Get game
+export const getGameByStream = searchData => dispatch => {
+    dispatch(setGamesLoading())
+    helix
+        .get(`games?id=${searchData}`)
+        .then(res => {
+            dispatch({
+                type: GET_GAME,
+                payload: res.data
+            })
+        })
+        .catch(err =>
+            dispatch(returnErrors(err.response.data, err.response.status))    
+        )
+}
+
 //GET https://api.twitch.tv/helix/games?id=VAR
 //Get games landing
 export const getTopGames = streamResult => dispatch => {

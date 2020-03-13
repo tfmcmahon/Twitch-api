@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { 
     getTopStreams
-} from '../actions/streamActions'
+} from '../../actions/streamActions'
 
-import GameCard from './GameCardComponent'
+import CardBoxArt from '../cards/CardBoxArtComponent'
 
 const TopGames = () => {
     //const topGames = useSelector(state => state.game.topGames)
@@ -15,8 +15,8 @@ const TopGames = () => {
         //dispatch(getTopStreams()) <=========================================uncomment to enable from page
     }, []) //using an empty array should only allow this to update on mount
 
-    const gameCards = topStreams.map(stream => 
-        <GameCard
+    const boxArtCards = topStreams.map(stream => 
+        <CardBoxArt
             key={stream.id}
             type={stream.type}
             gameId={stream.game_id} // match with top game state for game box art
@@ -30,7 +30,7 @@ const TopGames = () => {
 
     return (
         <div className="gameCardSection">
-            {gameCards}
+            {boxArtCards}
         </div>
     )
 }

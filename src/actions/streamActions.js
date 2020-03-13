@@ -11,7 +11,7 @@ import {
     STREAMS_LOADING
 } from './types'
 import { getTopGames } from './gameActions'
-import { getTopUsers, getUsersByGame } from './userActions'
+import { getTopUsers, getUsersByGame, getUser } from './userActions'
 
 
 const twitchID = config.TwitchID
@@ -19,7 +19,7 @@ const helix = axios.create({
     baseURL: 'https://api.twitch.tv/helix/',
     headers: {'Client-ID': twitchID}
 })
-let streams, gameIds, userIds
+let streams, gameIds, userId, userIds
 
 //Games loading
 //State action
@@ -60,13 +60,15 @@ export const getTopStreams = () => dispatch => {
         )
 }
 
-//GET https://api.twitch.tv/helix/stream?id=VAR
+//GET https://api.twitch.tv/helix/streams?user_login=VAR
 //Get streams
 export const getStream = searchData => dispatch => {
     dispatch(setStreamsLoading())
     helix
-        .get(`streams?id=`)
+        .get(`streams?user_login=${searchData}`)
         .then(res => {
+            userId = res.data.data[0].user_id
+            dispatch(getUser(userId))
             dispatch({
                 type: GET_STREAM,
                 payload: res.data
@@ -84,7 +86,6 @@ export const getStreamsByGame = searchData => dispatch => {
     helix
         .get(`streams?game_id=${searchData}`)
         .then(res => {
-            console.log(res.data)
             streams = res.data.data
             userIds = streams.map(stream => `id=${Number(stream.user_id)}`).join('&')
             dispatch(getUsersByGame(userIds)) // use the reuslting IDs to get user profile images

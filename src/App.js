@@ -4,10 +4,11 @@ import { Provider } from 'react-redux'
 import store from './store'
 import './App.css'
 
-import Nav from './components/NavComponent'
-import Footer from './components/FooterComponent'
-import Landing from './components/LandingComponent'
-import GamePage from './components/GamePageComponent'
+import Nav from './components/landing/NavComponent'
+import Footer from './components/landing/FooterComponent'
+import Landing from './components/landing/LandingComponent'
+import GamePage from './components/pages/GameSearchPageComponent'
+import StreamPage from './components/pages/StreamSearchPageComponent'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route exact path='/' component={Landing} />
           <Route exact path='/twitch-api' component={Landing} />
           <Route exact path='/twitch-api/game' component={GamePage} />
+          <Route exact path='/twitch-api/stream' component={StreamPage} />
           </Switch>
           <div className="blueFill"></div>
         </div>
