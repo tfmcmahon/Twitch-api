@@ -8,16 +8,20 @@ import {
     GET_TOP_STREAMS,
     STREAM_FADE_OFF,
     STREAM_FADE_ON,
-    STREAMS_LOADING
+    STREAMS_LOADING,
+    CLEAR_STREAMS
 } from './types'
 import { getTopGames } from './gameActions'
 import { getTopUsers, getUsersByGame, getUser } from './userActions'
 
 
-const twitchID = config.TwitchID
-const helix = axios.create({
+//initialize the helix request
+export const helix = (twitchToken) => axios.create({
     baseURL: 'https://api.twitch.tv/helix/',
-    headers: {'Client-ID': twitchID}
+    headers: {
+        'Client-ID': config.TwitchID,
+        'Authorization': `Bearer ${twitchToken}` // add auth token to the requests
+    }
 })
 let streams, gameIds, userId, userIds
 
@@ -40,17 +44,16 @@ export const setTopStreamsLoading = () => {
 
 //GET https://api.twitch.tv/helix/streams
 //GET top streams
-export const getTopStreams = () => dispatch => {
+export const getTopStreams = (twitchToken) => dispatch => {
     dispatch(setTopStreamsLoading())
-    helix
+    helix(twitchToken)
         .get('streams?first=20') 
         .then(res => {
             streams = res.data.data
-            console.log('get top streams called')
             gameIds = streams.map(stream => `id=${Number(stream.game_id)}`).join('&')
             userIds = streams.map(stream => `id=${Number(stream.user_id)}`).join('&')
-            dispatch(getTopGames(gameIds)) // use the reuslting IDs to get the game names and art links
-            dispatch(getTopUsers(userIds)) // use the reuslting IDs to get user profile images
+            dispatch(getTopGames(gameIds, twitchToken)) // use the reuslting IDs to get the game names and art links
+            dispatch(getTopUsers(userIds, twitchToken)) // use the reuslting IDs to get user profile images
             dispatch({
                 type: GET_TOP_STREAMS,
                 payload: res.data
@@ -63,12 +66,11 @@ export const getTopStreams = () => dispatch => {
 
 //GET https://api.twitch.tv/helix/streams?user_login=VAR
 //Get streams
-export const getStream = searchData => dispatch => {
+export const getStream = (twitchToken, searchData) => dispatch => {
     dispatch(setStreamsLoading())
-    helix
+    helix(twitchToken)
         .get(`streams?user_login=${searchData}`)
         .then(res => {
-            console.log(res.data.data)
             if (res.data.data.length > 0) {
                 userId = res.data.data[0].user_id
                 dispatch(getUser(userId))
@@ -76,6 +78,13 @@ export const getStream = searchData => dispatch => {
                     type: GET_STREAM,
                     payload: res.data
                 })
+            } else {
+                const error = {
+                    msg: 'Stream not found',
+                    status: 400,
+                    id: null
+                }
+                dispatch(returnErrors(error, error.status))
             }
         })
         .catch(err =>
@@ -85,14 +94,14 @@ export const getStream = searchData => dispatch => {
 
 //GET https://api.twitch.tv/helix/stream?id=VAR
 //Get streams by game
-export const getStreamsByGame = searchData => dispatch => {
+export const getStreamsByGame = (gameId, twitchToken) => dispatch => {
     dispatch(setStreamsLoading())
-    helix
-        .get(`streams?game_id=${searchData}`)
+    helix(twitchToken)
+        .get(`streams?game_id=${gameId}`)
         .then(res => {
             streams = res.data.data
             userIds = streams.map(stream => `id=${Number(stream.user_id)}`).join('&')
-            dispatch(getUsersByGame(userIds)) // use the reuslting IDs to get user profile images
+            dispatch(getUsersByGame(userIds, twitchToken)) // use the reuslting IDs to get user profile images
             dispatch({
                 type: GET_STREAMS_BY_GAME,
                 payload: res.data
@@ -119,9 +128,17 @@ export const streamFadeOn = () => {
     }
 }
 
+//Clear streams
+//State action
+export const clearStreams = () => {
+    return {
+        type: CLEAR_STREAMS
+    }
+}
+
 //Stream scrape
 export const streamScrape = () => dispatch => { //listData
-    helix
+    helix()
         .get(`streams?first=100&after=ZXlKeklqb3hNRGM0TGpZeU5qSTVPRFF3TVRZMU1EVXNJbVFpT21aaGJITmxMQ0owSWpwMGNuVmxmUT09IGV5SnpJam8zTVRrdU56RXlPVGMxTVRRME16Z3lOQ3dpWkNJNlptRnNjMlVzSW5RaU9uUnlkV1Y5`) //${listData.number}
         .then(res => {
             let topgames = res.data.data // clean up/remove later

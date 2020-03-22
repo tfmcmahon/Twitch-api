@@ -4,7 +4,8 @@ import {
     GET_GAME,
     GET_TOP_GAMES,
     GAME_FADE_ON,
-    GAME_FADE_OFF
+    GAME_FADE_OFF,
+    CLEAR_GAMES
 } from '../actions/types'
 
 const initialState = {
@@ -48,6 +49,11 @@ const gameReducers = function(state = initialState, action) {
             return {
                 ...state,
                 fade: false
+            }
+        case CLEAR_GAMES:
+            return {
+                game: [],
+                topGames: []
             }
         default:
             return state

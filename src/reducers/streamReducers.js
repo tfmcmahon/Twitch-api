@@ -5,7 +5,8 @@ import {
     GET_TOP_STREAMS,
     STREAM_FADE_OFF,
     STREAM_FADE_ON,
-    STREAMS_LOADING
+    STREAMS_LOADING,
+    CLEAR_STREAMS
 } from '../actions/types'
 
 const initialState = {
@@ -56,6 +57,12 @@ const streamReducers = function(state = initialState, action) {
             return {
                 ...state,
                 fade: false
+            }
+        case CLEAR_STREAMS:
+            return {
+                stream: [],
+                streams: [],
+                topStreams: []
             }
         default:
             return state

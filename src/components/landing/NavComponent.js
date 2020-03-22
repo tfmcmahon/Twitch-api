@@ -5,7 +5,7 @@ const Nav = () => {
     return (
         <header className="App-header">
             <div className="headerHelp">
-                <Link to="/" className="headerLink">
+                <Link to="/twitch-api/landing" className="headerLink">
                     <div className="headerHelpType">
                         <p className="headerProjectTitle">Twitch</p>
                         <p className="headerProjectTitle">Viewer</p>
@@ -23,7 +23,7 @@ const Nav = () => {
             </div>
             <div className="headerHelp">
                 <div className="verticalRuleSmallWhite"></div>
-                <Link to="/"> 
+                <Link to="/twitch-api/landing"> 
                     <button
                         className="homeButton"
                     >

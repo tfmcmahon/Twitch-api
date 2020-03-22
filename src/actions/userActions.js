@@ -11,11 +11,13 @@ import {
     USER_FADE_OFF
 } from './types'
 
-
-const twitchID = config.TwitchID
-const helix = axios.create({
+//initialize the helix request
+export const helix = (twitchToken) => axios.create({
     baseURL: 'https://api.twitch.tv/helix/',
-    headers: {'Client-ID': twitchID}
+    headers: {
+        'Client-ID': config.TwitchID,
+        'Authorization': `Bearer ${twitchToken}` // add auth token to the requests
+    }
 })
 
 //Users loading
@@ -36,10 +38,10 @@ export const setTopUsersLoading = () => {
 
 //GET https://api.twitch.tv/helix/users?id=VAR
 //Get users landing
-export const getTopUsers = streamResult => dispatch => {
+export const getTopUsers = (userIds, twitchToken) => dispatch => {
     dispatch(setUsersLoading())
-    helix
-        .get(`users?${streamResult}`)
+    helix(twitchToken)
+        .get(`users?${userIds}`)
         .then(res => {
             dispatch({
                 type: GET_TOP_USERS,
@@ -53,10 +55,10 @@ export const getTopUsers = streamResult => dispatch => {
 
 //GET https://api.twitch.tv/helix/users?id=VAR
 //Get users
-export const getUsersByGame = streamResult => dispatch => {
+export const getUsersByGame = (userIds, twitchToken) => dispatch => {
     dispatch(setUsersLoading())
-    helix
-        .get(`users?${streamResult}`) //id field is baked in from stream action since there are multiple searches and each one needs 'id=...'
+    helix(twitchToken)
+        .get(`users?${userIds}`) //id field is baked in from stream action since there are multiple searches and each one needs 'id=...'
         .then(res => {
             dispatch({
                 type: GET_USERS_BY_GAME,
@@ -70,10 +72,10 @@ export const getUsersByGame = streamResult => dispatch => {
 
 //GET https://api.twitch.tv/helix/users?id=VAR
 //Get user
-export const getUser = streamResult => dispatch => {
+export const getUser = (userId, twitchToken) => dispatch => {
     dispatch(setUsersLoading())
-    helix
-        .get(`users?id=${streamResult}`)
+    helix(twitchToken)
+        .get(`users?id=${userId}`)
         .then(res => {
             dispatch({
                 type: GET_USER,

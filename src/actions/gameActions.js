@@ -7,14 +7,17 @@ import {
     GET_GAME,
     GET_TOP_GAMES,
     GAME_FADE_ON,
-    GAME_FADE_OFF
+    GAME_FADE_OFF,
+    CLEAR_GAMES
 } from './types'
 
-
-const twitchID = config.TwitchID
-const helix = axios.create({
+//initialize the helix request
+export const helix = (twitchToken) => axios.create({
     baseURL: 'https://api.twitch.tv/helix/',
-    headers: {'Client-ID': twitchID}
+    headers: {
+        'Client-ID': config.TwitchID,
+        'Authorization': `Bearer ${twitchToken}` // add auth token to the requests
+    }
 })
 
 //Games loading
@@ -35,18 +38,17 @@ export const setTopGamesLoading = () => {
 
 //GET https://api.twitch.tv/helix/games?name=VAR
 //Get game
-export const getGame = searchData => dispatch => {
+export const getGame = (twitchToken, searchData) => dispatch => {
     dispatch(setGamesLoading())
-    helix
+    helix(twitchToken)
         .get(`games?name=${searchData}`)
         .then(res => {
-            console.log(res.data.data)
             if (res.data.data.length > 0) {
                 dispatch({
                     type: GET_GAME,
                     payload: res.data
                 })
-            }
+            } 
         })
         .catch(err =>
             dispatch(returnErrors(err.response.data, err.response.status))    
@@ -55,10 +57,10 @@ export const getGame = searchData => dispatch => {
 
 //GET https://api.twitch.tv/helix/games?name=VAR
 //Get game
-export const getGameByStream = searchData => dispatch => {
+export const getGameByStream = (gameId, twitchToken) => dispatch => {
     dispatch(setGamesLoading())
-    helix
-        .get(`games?id=${searchData}`)
+    helix(twitchToken)
+        .get(`games?id=${gameId}`)
         .then(res => {
             dispatch({
                 type: GET_GAME,
@@ -72,32 +74,11 @@ export const getGameByStream = searchData => dispatch => {
 
 //GET https://api.twitch.tv/helix/games?id=VAR
 //Get games landing
-export const getTopGames = streamResult => dispatch => {
-    dispatch(setGamesLoading())
-    helix
-        .get(`games?${streamResult}`)
-        .then(res => {
-            dispatch({
-                type: GET_TOP_GAMES,
-                payload: res.data
-            })
-        })
-        .catch(err =>
-            dispatch(returnErrors(err.response.data, err.response.status))    
-        )
-}
-
-
-//GET https://api.twitch.tv/helix/games/top
-//Get top games
-/*
-export const getTopGames = () => dispatch => {
+export const getTopGames = (gameIds, twitchToken) => dispatch => {
     dispatch(setTopGamesLoading())
-    helix
-        .get(`games/top`) //${listData.number}
+    helix(twitchToken)
+        .get(`games?${gameIds}`)
         .then(res => {
-            let topgames = res.data.data // clean up/remove later
-            console.log(topgames.map(game => game.name)) // clean up/remove later
             dispatch({
                 type: GET_TOP_GAMES,
                 payload: res.data
@@ -107,7 +88,6 @@ export const getTopGames = () => dispatch => {
             dispatch(returnErrors(err.response.data, err.response.status))    
         )
 }
-*/
 
 //Fade off
 //State action
@@ -125,9 +105,17 @@ export const gameFadeOn = () => {
     }
 }
 
+//Clear games
+//State action
+export const clearGames = () => {
+    return {
+        type: CLEAR_GAMES
+    }
+}
+
 //Games scape
 export const gamesScrape = () => dispatch => { //listData
-    helix
+    helix()
         .get(`games/top?first=100`) //${listData.number}
         .then(res => {
             let topgames = res.data.data // clean up/remove later

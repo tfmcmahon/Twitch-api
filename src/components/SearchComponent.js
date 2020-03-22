@@ -5,8 +5,20 @@ import Autosuggest from 'react-autosuggest'
 import gamesList from '../config/allGames'
 import streamsList from '../config/allStreams'
 
-import { getGame } from '../actions/gameActions'
-import { getStream, streamScrape } from '../actions/streamActions'
+import { clearErrors } from '../actions/errorActions'
+import { refreshTwitchToken } from '../actions/authActions'
+import { 
+    getGame, 
+    setGamesLoading,
+    clearGames 
+} from '../actions/gameActions'
+import { 
+    getStream, 
+    streamScrape, 
+    streamFadeOff, 
+    setStreamsLoading,
+    clearStreams 
+} from '../actions/streamActions'
 
 //Auto suggest => add streams list to auto fill
 
@@ -49,6 +61,14 @@ class Search extends Component {
         this.handleCheckBox = this.handleCheckBox.bind(this)
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.error !== prevProps.error) {
+            return this.props.error.msg.status === 401
+                ? this.props.refreshTwitchToken(this.props.auth.user.refresh_token)
+                : null
+        }
+    }
+
     onChange = (event, { newValue, method }) => {
         this.setState({
             value: newValue
@@ -79,19 +99,29 @@ class Search extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
-        const searchData = encodeURIComponent(this.state.value).replace(/'/g, "%27")
+        const searchData = encodeURIComponent(this.state.value)
+                            .replace(/'/g, "%27")
+                            .replace(/&/g, "%26")
+        const twitchToken = this.props.auth.user.access_token
+        this.props.clearErrors()
+        this.props.clearGames()
+        this.props.clearStreams()
+        this.props.streamFadeOff()
         if (this.state.findBy === false) {
-            this.props.getGame(searchData)
+            this.props.getGame(twitchToken, searchData)
+            this.props.setStreamsLoading()
             this.setState({
-                redirectGame: true
+                redirectGame: true,
+                redirectStream: false
             })
         } else {
-            console.log(searchData) //JimDavisMTG
-            this.props.getStream(searchData)
+            this.props.getStream(twitchToken, searchData)
+            this.props.setGamesLoading()
             this.setState({
+                redirectGame: false,
                 redirectStream: true
             })
-        } //check how to convert to twitch api id
+        }
     }
 
     renderRedirect = () => {
@@ -105,7 +135,7 @@ class Search extends Component {
     render() {
         const { value, suggestions } = this.state
         const inputProps = {
-          placeholder: this.state.findBy === false ? "Game*" : "Steam*",
+          placeholder: this.state.findBy === false ? "Game*" : "Stream*",
           value,
           onChange: this.onChange
         }
@@ -158,10 +188,22 @@ class Search extends Component {
 }
 
 const mapStateToProps = state => ({
-    errors: state.errors
+    error: state.error,
+    auth: state.auth
 })
 
 export default connect(
     mapStateToProps,
-    { getGame, getStream, streamScrape }
+    { 
+        getGame, 
+        getStream, 
+        streamScrape, 
+        clearErrors, 
+        streamFadeOff ,
+        setGamesLoading,
+        setStreamsLoading,
+        clearGames,
+        clearStreams,
+        refreshTwitchToken
+    }
 )(Search)

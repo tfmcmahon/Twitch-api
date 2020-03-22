@@ -9,7 +9,6 @@ const CardThumbnail = (props) => {
     const [selectedColor, setSelectedColor] = useState('')
 
     const colors = [ '#a3d2e4', '#334A52', '#fff',' #412485']
-
     let user = usersByGame.filter(user => user.id === props.userId)
     useEffect(() => {
         if (user.length > 0) { //usersByGame.length > 0 && 
@@ -28,28 +27,34 @@ const CardThumbnail = (props) => {
         }
     }, [usersByGame])
 
-    //console.log(user)
-    
     if (streamThumbnail) {
         return (
             <div className="gameCardWrapper">
-                <div className="boxArtWrapper">
-                    <img src={userProfileArt} alt="profile icon" className="profileImage"/>
-                    
-                    <p className="gridHelpText">shape</p>
-                    <p className="viewerCountText" id="viewerCountText" style={{backgroundColor: selectedColor}}>•{props.viewerCount}</p>
-                </div>
-
-                <div className="verticalRuleSmall"></div>
-
+                <a className="aHelp"
+                    href={`https://www.twitch.tv/${props.streamerName}`}                  
+                    rel='noopener noreferrer' 
+                    target='_blank'
+                >
+                    <div className="boxArtWrapper">
+                        <img src={userProfileArt} alt="profile icon" className="profileImage"/>
+                        <p className="gridHelpText">shape</p>
+                        <p className="viewerCountText" id="viewerCountText" style={{backgroundColor: selectedColor}}>•{props.viewerCount}</p>
+                    </div>
+                </a>
                 <div className="streamInfoWrapper">
                         <h3 className="streamerNameText">{props.streamerName}</h3>
+                        <div className="horizontalRule"></div>
                         <p className="streamTitleText">{props.title}</p>
                 </div>
-                <div className="verticalRuleSmall"></div>
 
                 <div className="streamImageWrapper">
-                    <img src={streamThumbnail} alt="box art" className="streamThumbnail"/>
+                    <a 
+                        href={`https://www.twitch.tv/${props.streamerName}`}                  
+                        rel='noopener noreferrer' 
+                        target='_blank'
+                    >
+                        <img src={streamThumbnail} alt="box art" className="streamThumbnail"/>
+                    </a>
                 </div>
             </div>
         )
