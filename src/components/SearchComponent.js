@@ -6,7 +6,7 @@ import gamesList from '../config/allGames'
 import streamsList from '../config/allStreams'
 
 import { clearErrors } from '../actions/errorActions'
-import { refreshTwitchToken } from '../actions/authActions'
+import { setAuthToken } from '../actions/authActions'
 import { 
     getGame, 
     setGamesLoading,
@@ -64,7 +64,7 @@ class Search extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.error !== prevProps.error) {
             return this.props.error.msg.status === 401
-                ? this.props.refreshTwitchToken(this.props.auth.user.refresh_token)
+                ? this.props.setAuthToken('')
                 : null
         }
     }
@@ -102,7 +102,7 @@ class Search extends Component {
         const searchData = encodeURIComponent(this.state.value)
                             .replace(/'/g, "%27")
                             .replace(/&/g, "%26")
-        const twitchToken = this.props.auth.user.access_token
+        const twitchToken = this.props.auth.token
         this.props.clearErrors()
         this.props.clearGames()
         this.props.clearStreams()
@@ -112,14 +112,16 @@ class Search extends Component {
             this.props.setStreamsLoading()
             this.setState({
                 redirectGame: true,
-                redirectStream: false
+                redirectStream: false,
+                value: ''
             })
         } else {
             this.props.getStream(twitchToken, searchData)
             this.props.setGamesLoading()
             this.setState({
                 redirectGame: false,
-                redirectStream: true
+                redirectStream: true,
+                value: ''
             })
         }
     }
@@ -204,6 +206,6 @@ export default connect(
         setStreamsLoading,
         clearGames,
         clearStreams,
-        refreshTwitchToken
+        setAuthToken
     }
 )(Search)

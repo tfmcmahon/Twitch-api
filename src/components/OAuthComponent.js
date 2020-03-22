@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import config from '../config/config'
 import Transition from '../images/transition1.svg'
@@ -20,10 +21,10 @@ const OAuth= () => {
 
     useEffect(() => {
         if (redirectString.length > 0) {
-            console.log(redirectString)
-            let token = redirectString.replace((/#access_token=/, "")).split('&')
-            console.log(token)
-            dispatch(loginTwitchUser(token[0]))
+            let hashRemove = /#access_token=/g
+            let tokenString = redirectString.replace(hashRemove, '').split('&')
+            console.log(tokenString)
+            dispatch(loginTwitchUser(tokenString[0]))
         }
     }, [])
 
@@ -48,16 +49,15 @@ const OAuth= () => {
                             Login with Twitch
                         </button>
                         :
-                        <button
-                            type="submit"
-                            name="game"
-                            className="OAuthButton"
-                            onClick={() => window.location.href = 
-                                `${baseURL}authorize?client_id=${twitchID}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&state=${state}`
-                            }
-                        >
-                        Proceed to App
-                    </button>
+                        <Link to="/twitch-api/landing" className="headerLink">
+                            <button
+                                type="submit"
+                                name="game"
+                                className="OAuthButton"
+                            >
+                                Proceed to App
+                            </button>
+                        </Link>
                     }
                 </div>
             </div>

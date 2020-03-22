@@ -504,6 +504,7 @@ h5 { font-size: var(--fs-h3) }
   background: var(--clr-neighbor1);
   padding: .25em .65em;
   font-family: var(--ff-primary);
+  font-size: var(--fs-body);
   margin-bottom: 1em;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;

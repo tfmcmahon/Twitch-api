@@ -7,7 +7,7 @@ import streamNotFound from '../../images/streamNotFound.png'
 
 import { getGameByStream } from '../../actions/gameActions'
 import { streamFadeOn } from '../../actions/streamActions'
-import { refreshTwitchToken } from '../../actions/authActions'
+import { setAuthToken } from '../../actions/authActions'
 
 const StreamSearchPage = () => {
     const dispatch = useDispatch()
@@ -17,7 +17,7 @@ const StreamSearchPage = () => {
     const gameLoading = useSelector(state => state.game.gameLoading)
     const streamLoading = useSelector(state => state.stream.streamLoading)
     const streamFade = useSelector(state => state.stream.fade)
-    const twitchUser = useSelector(state => state.auth.user)
+    const accessToken = useSelector(state => state.auth.token)
     
     const [userName, setUserName] = useState('')
     const [gameId, setGameId] = useState('')
@@ -26,7 +26,7 @@ const StreamSearchPage = () => {
 
     useEffect(() => { // handle expired token -- twitch docs suggest refreshing a token upon server rejection
         if (error.msg.status === 401) {
-            dispatch(refreshTwitchToken(twitchUser.refresh_token))
+            dispatch(setAuthToken(''))
         }
     }, [error])
 
@@ -48,7 +48,7 @@ const StreamSearchPage = () => {
 
     useEffect(() => {
         if (gameId) {
-            dispatch(getGameByStream(gameId, twitchUser.access_token))
+            dispatch(getGameByStream(gameId, accessToken.access_token))
         }
     }, [gameId])
 

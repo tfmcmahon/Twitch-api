@@ -15,8 +15,9 @@ const CardBoxArt = (props) => {
     const item = colors[Math.floor(Math.random()*colors.length)]
     let game = topGames.filter(game => game.id === props.gameId)
     let user = topUsers.filter(user => user.id === props.userId)
+    
     useEffect(() => {
-        if (topGames.length > 0 && topUsers.length > 0) { //game.length > 0 && user.length > 0
+        if (topGames.length > 0 && topUsers.length > 0 && user.length > 0) { //game.length > 0 && user.length > 0
             let [{box_art_url}] = game
             let [{name}] = game
             let [{profile_image_url}] = user

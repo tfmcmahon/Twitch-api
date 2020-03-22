@@ -1,23 +1,7 @@
 import axios from 'axios'
-import createAuthRefreshInterceptor from 'axios-auth-refresh'
-import jwtDecode from 'jwt-decode'
 import config from '../config/config'
 import { SET_CURRENT_TWITCH_USER } from './types'
 
-
-// Function that will be called to refresh authorization
-export const refreshAuthLogic = failedRequest => {
-    let encodedRefreshToken = encodeURIComponent(refreshToken)
-    axios
-        .post(`https://id.twitch.tv/oauth2/token--data-urlencode?grant_type=refresh_token&refresh_token=${encodedRefreshToken}&client_id=${config.TwitchID}&client_secret=${config.Secret}`)
-        .then(res => {
-            console.log('refresh action', res)
-            dispatch(setCurrentTwitchUser(res))
-            return Promise.resolve()
-        })
-}
-// Instantiate the interceptor (you can chain it as it returns the axios instance)
-createAuthRefreshInterceptor(axios, refreshAuthLogic)
 
 //Set Authorization token
 export const setAuthToken = twitchToken => {
@@ -30,26 +14,25 @@ export const setAuthToken = twitchToken => {
 
 //Login Twitch user
 export const loginTwitchUser = twitchToken => dispatch => {
+
+    console.log(twitchToken)
     //Save to local storage
     
     //Set token to local storage
-    localStorage.setItem('jwtToken', twitchToken)
+    localStorage.setItem('twitchToken', twitchToken)
 
-    //Set token to Auth header
+    //Set token to header
     setAuthToken(twitchToken)
 
-    //Decode token to get user data
-    const decoded = jwtDecode(twitchToken)
-
     //Set current user
-    dispatch(setCurrentTwitchUser(decoded))
+    dispatch(setCurrentTwitchUser(twitchToken))
 }
 
 //Set Twitch user
-export const setCurrentTwitchUser = decoded => {
+export const setCurrentTwitchUser = token => {
     return {
         type: SET_CURRENT_TWITCH_USER,
-        payload: decoded
+        payload: token
     }
 }
 

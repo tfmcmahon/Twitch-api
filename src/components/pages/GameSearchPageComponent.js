@@ -5,7 +5,7 @@ import CardThumbnail from '../cards/CardThumbnailComponent'
 import Transition from '../../images/transition1.svg'
 
 import { getStreamsByGame, streamFadeOn } from '../../actions/streamActions'
-import { refreshTwitchToken } from '../../actions/authActions'
+import { setAuthToken } from '../../actions/authActions'
 
 const GameSearchPage = () => {
     const dispatch = useDispatch()
@@ -15,7 +15,7 @@ const GameSearchPage = () => {
     const gameLoading = useSelector(state => state.game.gameLoading)
     const streamLoading = useSelector(state => state.stream.streamLoading)
     const streamFade = useSelector(state => state.stream.fade)
-    const twitchUser = useSelector(state => state.auth.user)
+    const accessToken = useSelector(state => state.auth.token)
 
     const [boxArtUrl, setBoxArtUrl] = useState('')
     const [gameName, setGameName] = useState('')
@@ -24,7 +24,7 @@ const GameSearchPage = () => {
    
     useEffect(() => { // handle expired token -- twitch docs suggest refreshing a token upon server rejection
         if (error.msg.status === 401) {
-            dispatch(refreshTwitchToken(twitchUser.refresh_token))
+            dispatch(setAuthToken(''))
         }
     }, [error])
 
@@ -45,7 +45,7 @@ const GameSearchPage = () => {
 
     useEffect(() => {
         if (gameId) {
-            dispatch(getStreamsByGame(gameId, twitchUser.access_token))
+            dispatch(getStreamsByGame(gameId, accessToken.access_token))
         }
     }, [gameId])
 
