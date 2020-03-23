@@ -28,7 +28,7 @@ const CardStreamer = (props) => {
                 .replace(/&/g, "%26")
             )
         }
-    }, [game])
+    }, [game, props.thumbnail])
 
     if (streamThumbnail && boxArtUrl) {
         return (

@@ -28,7 +28,7 @@ const StreamSearchPage = () => {
         if (error.msg.status === 401) {
             dispatch(logoutTwitchUser())
         }
-    }, [error])
+    }, [error, dispatch])
 
     useEffect(() => {
         if (stream.length > 0) {
@@ -44,19 +44,19 @@ const StreamSearchPage = () => {
             let [{profile_image_url}] = user
             setUserProfileArt(profile_image_url)
         }
-    }, [user])
+    }, [user, dispatch])
 
     useEffect(() => {
         if (gameId) {
             dispatch(getGameByStream(gameId, accessToken))
         }
-    }, [gameId])
+    }, [gameId, accessToken, dispatch])
 
     useEffect(() => {
         if (!streamLoading) {
             dispatch(streamFadeOn())
         }
-    }, [streamLoading])
+    }, [streamLoading, dispatch])
 
     useEffect(() => {
             setCardStreamer(stream.map(stream => 

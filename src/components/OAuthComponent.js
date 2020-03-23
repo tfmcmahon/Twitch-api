@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import config from '../config/config'
@@ -26,7 +26,7 @@ const OAuth= () => {
             console.log(tokenString)
             dispatch(loginTwitchUser(tokenString[0]))
         }
-    }, [])
+    }, [dispatch])
 
     return (
         <div>

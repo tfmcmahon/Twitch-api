@@ -27,7 +27,7 @@ const GameSearchPage = () => {
         if (error.msg.status === 401) {
             dispatch(logoutTwitchUser())
         }
-    }, [error])
+    }, [error, dispatch])
 
     useEffect(() => {
         if (game.length > 0) {
@@ -48,13 +48,13 @@ const GameSearchPage = () => {
         if (gameId) {
             dispatch(getStreamsByGame(gameId, accessToken))
         }
-    }, [gameId])
+    }, [gameId, accessToken, dispatch])
 
     useEffect(() => {
         if (!streamLoading) {
             dispatch(streamFadeOn())
         }
-    }, [streamLoading])
+    }, [streamLoading, dispatch])
 
     useEffect(() => {
         setThumbnailCards(streams.map(stream => 

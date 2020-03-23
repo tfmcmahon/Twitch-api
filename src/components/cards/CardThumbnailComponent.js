@@ -7,10 +7,10 @@ const CardThumbnail = (props) => {
     const [streamThumbnail, setStreamThumbnail] = useState('')
     const [userProfileArt, setUserProfileArt] = useState('')
     const [selectedColor, setSelectedColor] = useState('')
-
-    const colors = [ '#a3d2e4', '#334A52', '#fff',' #412485']
-    let user = usersByGame.filter(user => user.id === props.userId)
+        
     useEffect(() => {
+        let user = usersByGame.filter(user => user.id === props.userId)
+        let colors = [ '#a3d2e4', '#334A52', '#fff',' #412485']
         if (user.length > 0) { //usersByGame.length > 0 && 
             let [{profile_image_url}] = user
             setStreamThumbnail(
@@ -25,7 +25,7 @@ const CardThumbnail = (props) => {
             setSelectedColor(item)
 
         }
-    }, [usersByGame])
+    }, [usersByGame, props.thumbnail, props.userId])
 
     if (streamThumbnail) {
         return (

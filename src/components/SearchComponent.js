@@ -15,7 +15,6 @@ import {
 } from '../actions/gameActions'
 import { 
     getStream, 
-    streamScrape, 
     streamFadeOff, 
     setStreamsLoading,
     clearStreams 
@@ -38,7 +37,7 @@ const Search = () => {
         if (error.msg.status === 401) {
             dispatch(setAuthToken(''))
         }
-    }, [error])
+    }, [error, dispatch])
 
     function handleCheckBox() {
         return findBy ? setFindBy(false) : setFindBy(true)

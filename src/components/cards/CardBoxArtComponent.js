@@ -9,14 +9,10 @@ const CardBoxArt = (props) => {
     const [userProfileArt, setUserProfileArt] = useState('')
     const [gameName, setGameName] = useState('')
     const [selectedColor, setSelectedColor] = useState('')
-
-    //assign random color to stream banner
-    const colors = [ '#a3d2e4', '#334A52', '#fff',' #412485']
-    const item = colors[Math.floor(Math.random()*colors.length)]
-    let game = topGames.filter(game => game.id === props.gameId)
-    let user = topUsers.filter(user => user.id === props.userId)
     
     useEffect(() => {
+        let game = topGames.filter(game => game.id === props.gameId)
+        let user = topUsers.filter(user => user.id === props.userId)
         if (topGames.length > 0 && topUsers.length > 0 && user.length > 0) { //game.length > 0 && user.length > 0
             let [{box_art_url}] = game
             let [{name}] = game
@@ -29,10 +25,13 @@ const CardBoxArt = (props) => {
             setUserProfileArt(
                 profile_image_url
             )
-            setSelectedColor(item)
             setGameName(name)
+            //assign random color to stream banner
+            const colors = [ '#a3d2e4', '#334A52', '#fff',' #412485']
+            const item = colors[Math.floor(Math.random()*colors.length)]
+            setSelectedColor(item)
         }
-    }, [topGames, topUsers]) //swap this back to empty array
+    }, [topGames, topUsers, props.userId, props.gameId]) //swap this back to empty array
     
     if (boxArtUrl) {
         return (

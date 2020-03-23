@@ -18,18 +18,18 @@ const TopGames = () => {
         if (error.msg.status === 401) {
             dispatch(logoutTwitchUser())
         }
-    }, [error])
+    }, [error, dispatch])
 
 
     useEffect(() => {
         dispatch(getTopStreams(accessToken))
-    }, []) //using an empty array should only allow this to update on mount
+    }, [accessToken, dispatch]) //using an empty array should only allow this to update on mount
 
     useEffect(() => {
         if (!topStreamsLoading) {
             dispatch(streamFadeOn())
         }
-    }, [topStreamsLoading])
+    }, [topStreamsLoading, dispatch])
 
     const boxArtCards = topStreams.map(stream => 
         <CardBoxArt
