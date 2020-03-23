@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import Search from '../SearchComponent'
 import CardThumbnail from '../cards/CardThumbnailComponent'
 import Transition from '../../images/transition1.svg'
+import NotFoundArt from '../../images/404_boxart.png'
 
 import { getStreamsByGame, streamFadeOn } from '../../actions/streamActions'
-import { setAuthToken } from '../../actions/authActions'
+import { logoutTwitchUser } from '../../actions/authActions'
 
 const GameSearchPage = () => {
     const dispatch = useDispatch()
@@ -24,7 +25,7 @@ const GameSearchPage = () => {
    
     useEffect(() => { // handle expired token -- twitch docs suggest refreshing a token upon server rejection
         if (error.msg.status === 401) {
-            dispatch(setAuthToken(''))
+            dispatch(logoutTwitchUser())
         }
     }, [error])
 
@@ -45,7 +46,7 @@ const GameSearchPage = () => {
 
     useEffect(() => {
         if (gameId) {
-            dispatch(getStreamsByGame(gameId, accessToken.access_token))
+            dispatch(getStreamsByGame(gameId, accessToken))
         }
     }, [gameId])
 
@@ -83,7 +84,7 @@ const GameSearchPage = () => {
                     <p className="gameSearchedHeadline"><b>Search by Game or Stream above</b></p>
                     <p className="gameSearchedHeadline">Twitch requires an exact match to return a result</p>
                     <p className="gameSearchedHeadline">If you have reached this page in error, try using the suggestions drop down when searching</p>
-                    <img src="https://static-cdn.jtvnw.net/ttv-boxart/PLAYERUNKNOWN%27S%20BATTLEGROUNDS-{width}x{height}.jpg" alt="game not found" className="notFoundArt"/>
+                    <img src={NotFoundArt} alt="game not found" className="notFoundArt"/>
                 </div>
             </div>
         )
@@ -134,7 +135,7 @@ const GameSearchPage = () => {
                     <p className="gameSearchedHeadline"><b>Search by Game or Stream above</b></p>
                     <p className="gameSearchedHeadline">Twitch requires an exact match to return a result</p>
                     <p className="gameSearchedHeadline">If you have reached this page in error, try using the suggestions drop down when searching</p>
-                    <img src="https://static-cdn.jtvnw.net/ttv-boxart/PLAYERUNKNOWN%27S%20BATTLEGROUNDS-{width}x{height}.jpg" alt="game not found" className="notFoundArt"/>
+                    <img src={NotFoundArt} alt="game not found" className="notFoundArt"/>
                 </div>
             </div>
         )

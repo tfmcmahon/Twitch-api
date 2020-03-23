@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import config from '../config/config'
 import Transition from '../images/transition1.svg'
@@ -49,15 +49,7 @@ const OAuth= () => {
                             Login with Twitch
                         </button>
                         :
-                        <Link to="/twitch-api/landing" className="headerLink">
-                            <button
-                                type="submit"
-                                name="game"
-                                className="OAuthButton"
-                            >
-                                Proceed to App
-                            </button>
-                        </Link>
+                        <Redirect to="/twitch-api/landing" />
                     }
                 </div>
             </div>

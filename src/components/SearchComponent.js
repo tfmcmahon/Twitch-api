@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
+import { useState, useEffect } from "react"
+import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import Autosuggest from 'react-autosuggest'
 import gamesList from '../config/allGames'
@@ -20,192 +21,143 @@ import {
     clearStreams 
 } from '../actions/streamActions'
 
-//Auto suggest => add streams list to auto fill
 
-const getGamesSuggestions = value => {
-    const inputValue = value.trim().toLowerCase();
-    const inputLength = inputValue.length;
-  
-    return inputLength === 0 ? [] : gamesList.games.filter(game => 
-      game.toLowerCase().slice(0, inputLength) === inputValue
-    )
-}
 
-const getStreamsSuggestions = value => {
-    const inputValue = value.trim().toLowerCase();
-    const inputLength = inputValue.length;
-  
-    return inputLength === 0 ? [] : streamsList.streams.filter(stream => 
-      stream.toLowerCase().slice(0, inputLength) === inputValue
-    )
-}
+const Search = () => {
+    const dispatch = useDispatch()
+    const error = useSelector(state => state.error)
+    const accessToken = useSelector(state => state.auth.token)
 
-const getSuggestionValue = suggestion => suggestion
+    const [value, setValue] = useState('')
+    const [suggestions, setSuggestions] = useState([])
+    const [findBy, setFindBy] = useState(false)
+    const [redirectGame, setRedirectGame] = useState(false)
+    const [redirectStream, setRedirectStream] = useState(false)
 
-const renderSuggestion = suggestion => (
-    <span>
-      {suggestion}
-    </span>
-)
-
-class Search extends Component {
-    constructor() {
-        super()
-        this.state = {
-            value: '',
-            suggestions: [],
-            findBy: false,
-            redirectGame: false,
-            redirectStream: false
+    useEffect(() => { // handle expired token -- twitch docs suggest refreshing a token upon server rejection
+        if (error.msg.status === 401) {
+            dispatch(setAuthToken(''))
         }
-        this.handleCheckBox = this.handleCheckBox.bind(this)
+    }, [error])
+
+    function handleCheckBox() {
+        return findBy ? setFindBy(false) : setFindBy(true)
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.error !== prevProps.error) {
-            return this.props.error.msg.status === 401
-                ? this.props.setAuthToken('')
-                : null
-        }
+    function onSuggestionsFetchRequested({ value }) {
+        setValue(value)
+        !findBy
+        ? setSuggestions(getGamesSuggestions(value))
+        : setSuggestions(getStreamsSuggestions(value))
     }
 
-    onChange = (event, { newValue, method }) => {
-        this.setState({
-            value: newValue
-        })
-    }
-
-    handleCheckBox(event) {
-        const target = event.target
-        const value = target.checked
-        const name = target.name
-
-        this.setState({
-            [name]: value
-        })
-    }
-
-    onSuggestionsFetchRequested = ({ value }) => {
-        this.setState({
-            suggestions: this.state.findBy === false ? getGamesSuggestions(value) : getStreamsSuggestions(value)
-        })
-    }
-
-    onSuggestionsClearRequested = () => {
-        this.setState({
-            suggestions: []
-        });
-    }
-
-    handleSubmit = (event) => {
+    function handleSubmit(event) {
         event.preventDefault()
-        const searchData = encodeURIComponent(this.state.value)
+        const searchData = encodeURIComponent(value)
                             .replace(/'/g, "%27")
                             .replace(/&/g, "%26")
-        const twitchToken = this.props.auth.token
-        this.props.clearErrors()
-        this.props.clearGames()
-        this.props.clearStreams()
-        this.props.streamFadeOff()
-        if (this.state.findBy === false) {
-            this.props.getGame(twitchToken, searchData)
-            this.props.setStreamsLoading()
-            this.setState({
-                redirectGame: true,
-                redirectStream: false,
-                value: ''
-            })
+        dispatch(clearErrors())
+        dispatch(clearGames())
+        dispatch(clearStreams())
+        dispatch(streamFadeOff())
+        if (!findBy) {
+            dispatch(getGame(accessToken, searchData))
+            dispatch(setStreamsLoading())
+            setRedirectGame(true)
+            setRedirectStream(false)
+            setValue('')
         } else {
-            this.props.getStream(twitchToken, searchData)
-            this.props.setGamesLoading()
-            this.setState({
-                redirectGame: false,
-                redirectStream: true,
-                value: ''
-            })
+            dispatch(getStream(accessToken, searchData))
+            dispatch(setGamesLoading())
+            setRedirectGame(false)
+            setRedirectStream(true)
+            setValue('')
         }
     }
 
-    renderRedirect = () => {
-        if (this.state.redirectGame) {
+    function renderRedirect() {
+        if (redirectGame) {
             return <Redirect to='/twitch-api/game' />
-        } else if (this.state.redirectStream) {
+        } else if (redirectStream) {
             return <Redirect to='/twitch-api/stream' />
         }
     }
 
-    render() {
-        const { value, suggestions } = this.state
-        const inputProps = {
-          placeholder: this.state.findBy === false ? "Game*" : "Stream*",
-          value,
-          onChange: this.onChange
-        }
-
-        return (
-            <div className="getGames">
-                <h3 className="submitTitle">Search <b className="textAccent">Twitch.tv</b></h3>
-                <p className="subText">by game or streamer</p>
-                 <div className="toggleWrapper">
-                    <div className="can-toggle can-toggle--size-large">
-                        <input
-                            name="findBy"
-                            id="toggle" 
-                            type="checkbox"
-                            checked={this.state.findBy}
-                            onChange={this.handleCheckBox}
-                        />
-                        <label htmlFor="toggle">
-                            <div className="can-toggle__switch" data-checked="Stream" data-unchecked="Game"></div>
-                        </label>
-                        </div>
-                    </div>
-                <form
-                    className="submitGamesForm" 
-                    onSubmit={this.handleSubmit}
-                >
-                    <Autosuggest
-                        suggestions={suggestions}
-                        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                        getSuggestionValue={getSuggestionValue}
-                        renderSuggestion={renderSuggestion}
-                        inputProps={inputProps}
-                    />
-                    <div className="buttonWrapper">
-                        {this.renderRedirect()}
-                        <button
-                            type="submit"
-                            name="game"
-                            className="findGameButton"
-                        >
-                            Search
-                        </button>
-
-                    </div>
-                </form>
-            </div>
+    //Auto suggest => add games list to auto fill
+    const getGamesSuggestions = value => {
+        const inputValue = value.trim().toLowerCase();
+        const inputLength = inputValue.length;
+    
+        return inputLength === 0 ? [] : gamesList.games.filter(game => 
+        game.toLowerCase().slice(0, inputLength) === inputValue
         )
     }
+
+    //Auto suggest => add streams list to auto fill
+    const getStreamsSuggestions = value => {
+        const inputValue = value.trim().toLowerCase();
+        const inputLength = inputValue.length;
+    
+        return inputLength === 0 ? [] : streamsList.streams.filter(stream => 
+        stream.toLowerCase().slice(0, inputLength) === inputValue
+        )
+    }
+
+    const inputProps = {
+        placeholder: findBy === false ? "Game*" : "Stream*",
+        value: value,
+        onChange: (_, { newValue, method }) => {
+            setValue(newValue)
+        }
+    }
+
+    return (
+        <div className="getGames">
+            <h3 className="submitTitle">Search <b className="textAccent">Twitch.tv</b></h3>
+            <p className="subText">by game or streamer</p>
+                <div className="toggleWrapper">
+                <div className="can-toggle can-toggle--size-large">
+                    <input
+                        name="findBy"
+                        id="toggle" 
+                        type="checkbox"
+                        checked={findBy}
+                        onChange={handleCheckBox}
+                    />
+                    <label htmlFor="toggle">
+                        <div className="can-toggle__switch" data-checked="Stream" data-unchecked="Game"></div>
+                    </label>
+                    </div>
+                </div>
+            <form
+                className="submitGamesForm" 
+                onSubmit={handleSubmit}
+            >
+                <Autosuggest
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={() => setSuggestions([])}
+                    getSuggestionValue={suggestion => suggestion}
+                    renderSuggestion={suggestion =>
+                        <span>
+                            {suggestion}
+                        </span>}
+                    inputProps={inputProps}
+                />
+                <div className="buttonWrapper">
+                    {renderRedirect()}
+                    <button
+                        type="submit"
+                        name="game"
+                        className="findGameButton"
+                    >
+                        Search
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    )
 }
 
-const mapStateToProps = state => ({
-    error: state.error,
-    auth: state.auth
-})
-
-export default connect(
-    mapStateToProps,
-    { 
-        getGame, 
-        getStream, 
-        streamScrape, 
-        clearErrors, 
-        streamFadeOff ,
-        setGamesLoading,
-        setStreamsLoading,
-        clearGames,
-        clearStreams,
-        setAuthToken
-    }
-)(Search)
+export default Search

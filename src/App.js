@@ -21,7 +21,6 @@ import { loginTwitchUser } from './actions/authActions'
 
 //Check for token in local storage
 if (localStorage.twitchToken) {
-  console.log(localStorage.twitchToken)
   //If there is a token in local storage, add it to the store
   const twitchToken = localStorage.twitchToken
   store.dispatch(loginTwitchUser(twitchToken))

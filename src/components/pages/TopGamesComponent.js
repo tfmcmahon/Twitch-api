@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTopStreams, streamFadeOn } from '../../actions/streamActions'
-import { setAuthToken } from '../../actions/authActions'
+import { logoutTwitchUser } from '../../actions/authActions'
 
 import CardBoxArt from '../cards/CardBoxArtComponent'
 
@@ -16,13 +16,13 @@ const TopGames = () => {
 
     useEffect(() => { // handle expired token -- twitch docs suggest refreshing a token upon server rejection
         if (error.msg.status === 401) {
-            dispatch(setAuthToken(''))
+            dispatch(logoutTwitchUser())
         }
     }, [error])
 
 
     useEffect(() => {
-        dispatch(getTopStreams(accessToken.access_token))
+        dispatch(getTopStreams(accessToken))
     }, []) //using an empty array should only allow this to update on mount
 
     useEffect(() => {
