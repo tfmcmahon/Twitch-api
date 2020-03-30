@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import config from '../config/config'
 import Transition from '../images/transition1.svg'
+import Walkthrough from './WalkthroughComponent'
 
 import { loginTwitchUser } from '../actions/authActions'
 
@@ -15,7 +16,7 @@ const state = config.State
 
 const redirectString = document.location.hash || ''
 
-const OAuth= () => {
+const OAuth = () => {
     const authenticated = useSelector(state => state.auth.authenticated)
     const dispatch = useDispatch()
 
@@ -54,7 +55,14 @@ const OAuth= () => {
                 </div>
             </div>
             <img src={Transition} alt="transition graphic" className="landingImage"></img>
+            <div className="walkThroughIntro">
+                <p>
+                    Welcome! This is a front-end App that interacts with the Twitch.tv API. It was created using React hooks. Check out the app features below. Hover over the images to see it in action:
+                </p>
+            </div>
+            <div className="horizontalRule"></div>
             <div className="OAuthBody">
+                <Walkthrough />
             </div>
         </div>
     )
