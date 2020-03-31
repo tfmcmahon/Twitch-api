@@ -12,7 +12,6 @@ const twitchID = config.TwitchID
 const redirectUri = 'https://tfmcmahon.github.io/twitch-api'
 const responseType = 'token'
 const scope = ''
-const state = config.State
 
 const redirectString = document.location.hash || ''
 
@@ -24,7 +23,6 @@ const OAuth = () => {
         if (redirectString.length > 0) {
             let hashRemove = /#access_token=/g
             let tokenString = redirectString.replace(hashRemove, '').split('&')
-            console.log(tokenString)
             dispatch(loginTwitchUser(tokenString[0]))
         }
     }, [dispatch])
@@ -44,7 +42,7 @@ const OAuth = () => {
                             name="game"
                             className="OAuthButton"
                             onClick={() => window.location.href = //send user to twitch login with data
-                                `${baseURL}authorize?client_id=${twitchID}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&state=${state}`
+                                `${baseURL}authorize?client_id=${twitchID}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`
                             }
                         >
                             Login with Twitch
