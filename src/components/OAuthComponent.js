@@ -9,7 +9,7 @@ import { loginTwitchUser } from '../actions/authActions'
 
 const baseURL = 'https://id.twitch.tv/oauth2/'
 const twitchID = config.TwitchID
-const redirectUri = 'https://tfmcmahon.github.io/twitch-api/'
+const redirectUri = 'https://tfmcmahon.github.io/twitch-api'
 const responseType = 'token'
 const scope = ''
 const state = config.State
