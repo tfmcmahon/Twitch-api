@@ -19,7 +19,7 @@ import { getTopUsers, getUsersByGame, getUser } from './userActions'
 export const helix = (twitchToken) => axios.create({
     baseURL: 'https://api.twitch.tv/helix/',
     headers: {
-        'Client-ID': config.TwitchID,
+        'Client-ID': config.TwitchID || process.env.TWITCH_ID,
         'Authorization': `Bearer ${twitchToken}` // add auth token to the requests
     }
 })

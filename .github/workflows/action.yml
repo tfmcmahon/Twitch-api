@@ -1,0 +1,6 @@
+steps:
+  - name: Environmeny setup
+  with:
+    TWITCH_ID: ${{ secrets.TwitchID }}
+  env:
+    TWITCH_ID: ${{ secrets.TwitchID }}
