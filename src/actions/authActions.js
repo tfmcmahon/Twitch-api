@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { SET_CURRENT_TWITCH_USER } from './types'
+import { SET_CURRENT_TWITCH_USER, CLEAR_TIME, TIMED_OUT } from './types'
 
 
 //Set Authorization token
@@ -42,4 +42,16 @@ export const logoutTwitchUser = () => dispatch => {
 
     //Set current user
     dispatch(setCurrentTwitchUser(''))
+}
+
+export const clearTime = () => dispatch => {
+    return {
+        type: CLEAR_TIME
+    }
+}
+
+export const timedOut = () => dispatch => {
+    return {
+        type: TIMED_OUT
+    }
 }

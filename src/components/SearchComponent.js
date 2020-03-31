@@ -7,7 +7,7 @@ import gamesList from '../config/allGames'
 import streamsList from '../config/allStreams'
 
 import { clearErrors } from '../actions/errorActions'
-import { setAuthToken } from '../actions/authActions'
+import { setAuthToken, clearTime, timedOut } from '../actions/authActions'
 import { 
     getGame, 
     setGamesLoading,
@@ -33,7 +33,7 @@ const Search = () => {
     const [redirectGame, setRedirectGame] = useState(false)
     const [redirectStream, setRedirectStream] = useState(false)
 
-    useEffect(() => { // handle expired token -- twitch docs suggest refreshing a token upon server rejection
+    useEffect(() => { // handle expired token 
         if (error.msg.status === 401) {
             dispatch(setAuthToken(''))
         }
@@ -59,6 +59,10 @@ const Search = () => {
         dispatch(clearGames())
         dispatch(clearStreams())
         dispatch(streamFadeOff())
+        dispatch(clearTime())
+        setTimeout(
+            dispatch(timedOut()),
+        5000)
         if (!findBy) {
             dispatch(getGame(accessToken, searchData))
             dispatch(setStreamsLoading())

@@ -33,3 +33,5 @@ export const USERS_LOADING = 'USERS_LOADING'
 
 //Auth types
 export const SET_CURRENT_TWITCH_USER = 'SET_CURRENT_TWITCH_USER'
+export const CLEAR_TIME = 'CLEAR_TIME'
+export const TIMED_OUT = 'TIMED_OUT'

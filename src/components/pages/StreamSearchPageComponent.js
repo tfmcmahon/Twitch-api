@@ -18,6 +18,7 @@ const StreamSearchPage = () => {
     const streamLoading = useSelector(state => state.stream.streamLoading)
     const streamFade = useSelector(state => state.stream.fade)
     const accessToken = useSelector(state => state.auth.token)
+    const timedOut = useSelector(state => state.auth.timedOut)
     
     const [userName, setUserName] = useState('')
     const [gameId, setGameId] = useState('')
@@ -94,15 +95,32 @@ const StreamSearchPage = () => {
             </div>
         )
     } else if (streamLoading || gameLoading) { // loading circle if streams are loading
-        return (
+        if (!timedOut) {
+            return (
+                <div>
+                    <Search />
+                    <img src={Transition} alt="transition graphic" className="landingImage"></img>
+                    <div className="loadingWrapper">
+                        <div className="loading"></div>
+                    </div>
+                </div>
+            )
+        } else { //handle no response from Twitch
             <div>
                 <Search />
                 <img src={Transition} alt="transition graphic" className="landingImage"></img>
-                <div className="loadingWrapper">
-                    <div className="loading"></div>
+                <div className="errorHeadlineArtWrapper">
+                    <p className="errorText"><b>No response from Twitch</b></p>
+                    <div className="horizontalRuleWrapper">
+                        <div className="horizontalRule"></div>
+                    </div>
+                    <p className="gameSearchedHeadline"><b>Search by Game or Stream above</b></p>
+                    <p className="gameSearchedHeadline">Twitch requires an exact match to return a result</p>
+                    <p className="gameSearchedHeadline">If you have reached this page in error, try using the suggestions drop down when searching</p>
+                    <img src={NotFoundArt} alt="game not found" className="notFoundArt"/>
                 </div>
             </div>
-        )
+        }
     } else if (stream.length > 0) { // render the searched stream profile
         return (
             <div>
