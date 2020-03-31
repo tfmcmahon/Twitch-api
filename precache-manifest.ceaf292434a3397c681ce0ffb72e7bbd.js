@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8842f11aeb5cf45316f3acbb68456091",
+    "revision": "049733a471d4238347b2b5d6583e1ec5",
     "url": "/twitch-api/index.html"
   },
   {
