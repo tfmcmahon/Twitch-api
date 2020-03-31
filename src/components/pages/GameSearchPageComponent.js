@@ -17,8 +17,8 @@ const GameSearchPage = () => {
     const streamLoading = useSelector(state => state.stream.streamLoading)
     const streamFade = useSelector(state => state.stream.fade)
     const accessToken = useSelector(state => state.auth.token)
-    const timedOut = useSelector(state => state.auth.timedOut)
 
+    const [timedOut, setTimedOut] = useState(false)
     const [boxArtUrl, setBoxArtUrl] = useState('')
     const [gameName, setGameName] = useState('')
     const [gameId, setGameId] = useState('')
@@ -56,6 +56,13 @@ const GameSearchPage = () => {
             dispatch(streamFadeOn())
         }
     }, [streamLoading, dispatch])
+
+    useEffect(() => { // set a timer for the API to resond
+        const timer = setTimeout(() => {
+            setTimedOut(true)
+        }, 5000)
+        return () => clearTimeout(timer)
+    }, [])
 
     useEffect(() => {
         setThumbnailCards(streams.map(stream => 
@@ -101,20 +108,22 @@ const GameSearchPage = () => {
                 </div>
             )
         } else { //handle no response from Twitch
-            <div>
-                <Search />
-                <img src={Transition} alt="transition graphic" className="landingImage"></img>
-                <div className="errorHeadlineArtWrapper">
-                    <p className="errorText"><b>No response from Twitch</b></p>
-                    <div className="horizontalRuleWrapper">
-                        <div className="horizontalRule"></div>
+            return (
+                <div>
+                    <Search />
+                    <img src={Transition} alt="transition graphic" className="landingImage"></img>
+                    <div className="errorHeadlineArtWrapper">
+                        <p className="errorText"><b>No response from Twitch</b></p>
+                        <div className="horizontalRuleWrapper">
+                            <div className="horizontalRule"></div>
+                        </div>
+                        <p className="gameSearchedHeadline"><b>Search by Game or Stream above</b></p>
+                        <p className="gameSearchedHeadline">Twitch requires an exact match to return a result</p>
+                        <p className="gameSearchedHeadline">If you have reached this page in error, try using the suggestions drop down when searching</p>
+                        <img src={NotFoundArt} alt="game not found" className="notFoundArt"/>
                     </div>
-                    <p className="gameSearchedHeadline"><b>Search by Game or Stream above</b></p>
-                    <p className="gameSearchedHeadline">Twitch requires an exact match to return a result</p>
-                    <p className="gameSearchedHeadline">If you have reached this page in error, try using the suggestions drop down when searching</p>
-                    <img src={NotFoundArt} alt="game not found" className="notFoundArt"/>
                 </div>
-            </div>
+            )
         }
     } else if (game.length > 0) { // render the streams that are playing the searched game
         return (

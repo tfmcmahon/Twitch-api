@@ -7,7 +7,7 @@ import gamesList from '../config/allGames'
 import streamsList from '../config/allStreams'
 
 import { clearErrors } from '../actions/errorActions'
-import { setAuthToken, clearTime, timedOut } from '../actions/authActions'
+import { setAuthToken } from '../actions/authActions'
 import { 
     getGame, 
     setGamesLoading,
@@ -59,10 +59,6 @@ const Search = () => {
         dispatch(clearGames())
         dispatch(clearStreams())
         dispatch(streamFadeOff())
-        dispatch(clearTime())
-        setTimeout(
-            dispatch(timedOut()),
-        5000)
         if (!findBy) {
             dispatch(getGame(accessToken, searchData))
             dispatch(setStreamsLoading())

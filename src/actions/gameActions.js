@@ -48,7 +48,14 @@ export const getGame = (twitchToken, searchData) => dispatch => {
                     type: GET_GAME,
                     payload: res.data
                 })
-            } 
+            } else {
+                const error = {
+                    msg: 'Game not found',
+                    status: 400,
+                    id: null
+                }
+                dispatch(returnErrors(error, error.status))
+            }
         })
         .catch(err =>
             dispatch(returnErrors(err.response.data, err.response.status))    
