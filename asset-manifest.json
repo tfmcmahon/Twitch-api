@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/twitch-api/static/css/main.cfe7df0b.chunk.css",
+    "main.css": "/twitch-api/static/css/main.9697de9f.chunk.css",
     "main.js": "/twitch-api/static/js/main.ce982b4e.chunk.js",
     "main.js.map": "/twitch-api/static/js/main.ce982b4e.chunk.js.map",
     "runtime-main.js": "/twitch-api/static/js/runtime-main.8bca2eee.js",
@@ -8,9 +8,9 @@
     "static/js/2.fd8f8a6e.chunk.js": "/twitch-api/static/js/2.fd8f8a6e.chunk.js",
     "static/js/2.fd8f8a6e.chunk.js.map": "/twitch-api/static/js/2.fd8f8a6e.chunk.js.map",
     "index.html": "/twitch-api/index.html",
-    "precache-manifest.9e96cf0bf8c675f45469a29f792c9783.js": "/twitch-api/precache-manifest.9e96cf0bf8c675f45469a29f792c9783.js",
+    "precache-manifest.c73aee09af5231b50f985177eacb24f5.js": "/twitch-api/precache-manifest.c73aee09af5231b50f985177eacb24f5.js",
     "service-worker.js": "/twitch-api/service-worker.js",
-    "static/css/main.cfe7df0b.chunk.css.map": "/twitch-api/static/css/main.cfe7df0b.chunk.css.map",
+    "static/css/main.9697de9f.chunk.css.map": "/twitch-api/static/css/main.9697de9f.chunk.css.map",
     "static/js/2.fd8f8a6e.chunk.js.LICENSE.txt": "/twitch-api/static/js/2.fd8f8a6e.chunk.js.LICENSE.txt",
     "static/media/links.gif": "/twitch-api/static/media/links.35171fe0.gif",
     "static/media/login.gif": "/twitch-api/static/media/login.1fd04916.gif",
@@ -21,7 +21,7 @@
   "entrypoints": [
     "static/js/runtime-main.8bca2eee.js",
     "static/js/2.fd8f8a6e.chunk.js",
-    "static/css/main.cfe7df0b.chunk.css",
+    "static/css/main.9697de9f.chunk.css",
     "static/js/main.ce982b4e.chunk.js"
   ]
 }
