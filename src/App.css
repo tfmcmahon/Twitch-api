@@ -222,6 +222,7 @@ a:hover {
 .homeButton,
 .findGameButton,
 .OAuthButton {
+  font-family: var(--ff-primary);
   display: inline-block;
   padding: .5em 1.5em;
   background: var(--clr-neighbor2);
@@ -236,6 +237,7 @@ a:hover {
   font-weight: var(--fw-bold);
   transition: transform 50ms linear;
   margin: 1em;
+  border-style: solid;
   border-width: 1px;
   border-bottom-width: 2px;
   border-color: black
@@ -1077,6 +1079,42 @@ h5 { font-size: var(--fs-h3) }
   }
 }
 @keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+ 
+/* Firefox < 16 */
+@-moz-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+ 
+/* Internet Explorer */
+@-ms-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+  
+/* Opera < 12.1 */
+@-o-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
             transform: rotate(0deg);
