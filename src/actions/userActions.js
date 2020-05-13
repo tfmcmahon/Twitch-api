@@ -82,7 +82,7 @@ export const getUser = (userId, twitchToken) => dispatch => {
                 payload: res.data
             })
         })
-        .catch(err =>
+        .catch(err => 
             dispatch(returnErrors(err.response.data, err.response.status))    
         )
 }

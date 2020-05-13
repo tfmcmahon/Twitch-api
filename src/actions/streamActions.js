@@ -73,7 +73,7 @@ export const getStream = (twitchToken, searchData) => dispatch => {
         .then(res => {
             if (res.data.data.length > 0) {
                 userId = res.data.data[0].user_id
-                dispatch(getUser(userId))
+                dispatch(getUser(userId, twitchToken))
                 dispatch({
                     type: GET_STREAM,
                     payload: res.data
@@ -87,9 +87,9 @@ export const getStream = (twitchToken, searchData) => dispatch => {
                 dispatch(returnErrors(error, error.status))
             }
         })
-        .catch(err =>
+        .catch(err => {
             dispatch(returnErrors(err.response.data, err.response.status))    
-        )
+        })
 }
 
 //GET https://api.twitch.tv/helix/stream?id=VAR
